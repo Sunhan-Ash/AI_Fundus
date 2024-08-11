@@ -1,0 +1,21 @@
+================ Training Loss (Thu Jul 18 11:24:56 2024) ================
+(epoch: 1, iters: 100, time: 0.128, data: 1.057) D_A: 0.179 G_A: 0.464 cycle_A: 1.683 idt_A: 1.235 D_B: 0.652 G_B: 1.758 cycle_B: 2.546 idt_B: 0.884 
+(epoch: 1, iters: 200, time: 0.130, data: 0.001) D_A: 0.254 G_A: 0.244 cycle_A: 3.098 idt_A: 0.420 D_B: 0.341 G_B: 0.377 cycle_B: 0.904 idt_B: 1.686 
+================ Training Loss (Thu Jul 18 11:26:26 2024) ================
+(epoch: 1, iters: 100, time: 0.125, data: 1.008) D_A: 0.345 G_A: 0.267 cycle_A: 2.625 idt_A: 0.404 D_B: 0.655 G_B: 0.611 cycle_B: 1.055 idt_B: 1.441 
+(epoch: 1, iters: 200, time: 0.135, data: 0.001) D_A: 0.358 G_A: 0.190 cycle_A: 1.821 idt_A: 0.419 D_B: 0.432 G_B: 0.316 cycle_B: 0.806 idt_B: 0.995 
+(epoch: 1, iters: 300, time: 0.130, data: 0.001) D_A: 0.302 G_A: 0.372 cycle_A: 1.193 idt_A: 0.777 D_B: 0.240 G_B: 0.465 cycle_B: 1.732 idt_B: 0.584 
+(epoch: 1, iters: 400, time: 0.322, data: 0.001) D_A: 0.294 G_A: 0.273 cycle_A: 1.669 idt_A: 0.310 D_B: 0.291 G_B: 0.147 cycle_B: 0.561 idt_B: 0.753 
+(epoch: 1, iters: 500, time: 0.133, data: 0.001) D_A: 0.260 G_A: 0.343 cycle_A: 1.449 idt_A: 0.353 D_B: 0.310 G_B: 0.399 cycle_B: 0.760 idt_B: 0.669 
+(epoch: 1, iters: 600, time: 0.126, data: 0.001) D_A: 0.263 G_A: 0.429 cycle_A: 2.524 idt_A: 0.297 D_B: 0.379 G_B: 0.353 cycle_B: 0.570 idt_B: 1.146 
+(epoch: 1, iters: 700, time: 0.129, data: 0.001) D_A: 0.308 G_A: 0.501 cycle_A: 1.882 idt_A: 0.223 D_B: 0.161 G_B: 0.383 cycle_B: 0.450 idt_B: 0.888 
+(epoch: 1, iters: 800, time: 0.220, data: 0.001) D_A: 0.193 G_A: 0.460 cycle_A: 1.384 idt_A: 0.235 D_B: 0.231 G_B: 0.858 cycle_B: 0.464 idt_B: 0.658 
+================ Training Loss (Thu Jul 18 11:29:15 2024) ================
+(epoch: 1, iters: 100, time: 0.125, data: 1.021) D_A: 0.280 G_A: 0.626 cycle_A: 2.352 idt_A: 0.764 D_B: 0.549 G_B: 0.567 cycle_B: 1.262 idt_B: 1.059 
+(epoch: 1, iters: 200, time: 0.125, data: 0.001) D_A: 0.235 G_A: 0.363 cycle_A: 1.474 idt_A: 0.628 D_B: 0.399 G_B: 0.445 cycle_B: 1.274 idt_B: 0.757 
+(epoch: 1, iters: 300, time: 0.126, data: 0.001) D_A: 0.277 G_A: 0.284 cycle_A: 1.504 idt_A: 0.318 D_B: 0.297 G_B: 0.386 cycle_B: 0.573 idt_B: 0.557 
+(epoch: 1, iters: 400, time: 0.293, data: 0.001) D_A: 0.235 G_A: 0.427 cycle_A: 2.165 idt_A: 0.684 D_B: 0.401 G_B: 0.357 cycle_B: 1.495 idt_B: 1.225 
+(epoch: 1, iters: 500, time: 0.134, data: 0.001) D_A: 0.107 G_A: 0.434 cycle_A: 1.720 idt_A: 0.370 D_B: 0.301 G_B: 0.248 cycle_B: 0.825 idt_B: 0.925 
+================ Training Loss (Thu Jul 18 13:36:15 2024) ================
+================ Training Loss (Thu Jul 18 13:44:06 2024) ================
+================ Training Loss (Thu Jul 18 13:53:45 2024) ================

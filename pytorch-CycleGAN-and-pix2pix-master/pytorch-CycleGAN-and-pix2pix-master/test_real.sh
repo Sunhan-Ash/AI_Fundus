@@ -1,0 +1,1 @@
+python test.py --dataroot ./datasets/unpaired_real --name EyeQ_cyclegan2 --model cycle_gan
