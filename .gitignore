@@ -1,0 +1,6 @@
+*.jpg
+*.png
+*.zip
+
+/dataset/
+/EyeQ-master/
