@@ -314,14 +314,102 @@ def cal_gradient_penalty(netD, real_data, fake_data, device, type='mixed', const
     else:
         return 0.0, None
 
+class PatchEmbed(nn.Module):
+	def __init__(self, patch_size=4, in_chans=3, embed_dim=96, kernel_size=None):
+		super().__init__()
+		self.in_chans = in_chans
+		self.embed_dim = embed_dim
 
+		if kernel_size is None:
+			kernel_size = patch_size
+
+		self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=kernel_size, stride=patch_size,
+							  padding=(kernel_size-patch_size+1)//2, padding_mode='reflect')
+
+	def forward(self, x):
+		x = self.proj(x)
+		return x
+
+class PatchUnEmbed(nn.Module):
+	def __init__(self, patch_size=4, out_chans=3, embed_dim=96, kernel_size=None):
+		super().__init__()
+		self.out_chans = out_chans
+		self.embed_dim = embed_dim
+
+		if kernel_size is None:
+			kernel_size = 1
+
+		self.proj = nn.Sequential(
+			nn.Conv2d(embed_dim, out_chans*patch_size**2, kernel_size=kernel_size,
+					  padding=kernel_size//2, padding_mode='reflect'),
+			nn.PixelShuffle(patch_size)
+		)
+
+	def forward(self, x):
+		x = self.proj(x)
+		return x
+
+
+class UResnetGenerator(nn.Module):
+    """Resnet-based generator that consists of Resnet blocks between a few downsampling/upsampling operations.
+
+    We adapt Torch code and idea from Justin Johnson's neural style transfer project(https://github.com/jcjohnson/fast-neural-style)
+    """
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=9, padding_type='reflect',depth=9):
+        assert(n_blocks >= 0)
+        super(ResnetGenerator, self).__init__()
+        if type(norm_layer) == functools.partial:
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        self.patch_merge1 = PatchEmbed(
+			patch_size=2, in_chans=embed_dims[0], embed_dim=embed_dims[1])
+        self.patch_unembed = PatchUnEmbed(
+			patch_size=1, out_chans=out_chans, embed_dim=embed_dims[4], kernel_size=3)
+
+
+    def check_image_size(self, x):
+		# NOTE: for I2I test
+		_, _, h, w = x.size()
+		mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
+		mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
+		x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
+		return x   
+
+    def forward(self, input):
+
+        input = self.check_image_size(input)
+
+
+        return      
+
+class OurResnetBlock(nn.Module):
+    """Define a Resnet block"""
+    
+    def __init__(self, dim, padding_type, norm_layer, use_dropout, use_bias):
+        super(OurResnetBlock, self).__init__()
+        self.conv_block = self.build_conv_block(dim, padding_type, norm_layer, use_dropout, use_bias)
+
+    def build_conv_block(self, dim, padding_type, norm_layer, use_dropout, use_bias):
+        conv_block = []
+
+        conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p, bias=use_bias), norm_layer(dim), nn.ReLU(True)]
+        if use_dropout:
+            conv_block += [nn.Dropout(0.5)]
+
+        conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p, bias=use_bias), norm_layer(dim)]
+        return nn.Sequential(*conv_block)
+        
+    def forward(self, x):
+        x = x + self.conv_block(x)  # add skip connections
+        return x
 class ResnetGenerator(nn.Module):
     """Resnet-based generator that consists of Resnet blocks between a few downsampling/upsampling operations.
 
     We adapt Torch code and idea from Justin Johnson's neural style transfer project(https://github.com/jcjohnson/fast-neural-style)
     """
 
-    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, padding_type='reflect'):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, padding_type='reflect',alpha=0.7):
         """Construct a Resnet-based generator
 
         Parameters:
@@ -373,7 +461,11 @@ class ResnetGenerator(nn.Module):
 
     def forward(self, input):
         """Standard forward"""
-        return self.model(input)
+        x = Identity(input)
+        out = self.model(input)
+        out = alpha * out + (1 - alpha) * input
+
+        return out
 
 
 class ResnetBlock(nn.Module):
@@ -465,6 +557,7 @@ class UnetGenerator(nn.Module):
 
     def forward(self, input):
         """Standard forward"""
+        
         return self.model(input)
 
 
