@@ -355,26 +355,28 @@ class UResnetGenerator(nn.Module):
 
     We adapt Torch code and idea from Justin Johnson's neural style transfer project(https://github.com/jcjohnson/fast-neural-style)
     """
-    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=9, padding_type='reflect',depth=9):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=9, padding_type='reflect',depth=9,out_chans=3):
         assert(n_blocks >= 0)
         super(ResnetGenerator, self).__init__()
+        self.patch_size = int(depth/2)
+        temp_embed_dims = [32, 64, 128, 256, 512]
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
         self.patch_merge1 = PatchEmbed(
-			patch_size=2, in_chans=embed_dims[0], embed_dim=embed_dims[1])
+			patch_size=2, in_chans=temp_embed_dims[0], embed_dim=temp_embed_dims[1])
         self.patch_unembed = PatchUnEmbed(
-			patch_size=1, out_chans=out_chans, embed_dim=embed_dims[4], kernel_size=3)
+			patch_size=1, out_chans=out_chans, embed_dim=temp_embed_dims[4], kernel_size=3)
 
 
     def check_image_size(self, x):
 		# NOTE: for I2I test
-		_, _, h, w = x.size()
-		mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
-		mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
-		x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
-		return x   
+        _, _, h, w = x.size()
+        mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
+        mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
+        x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
+        return x   
 
     def forward(self, input):
 
@@ -421,6 +423,7 @@ class ResnetGenerator(nn.Module):
             n_blocks (int)      -- the number of ResNet blocks
             padding_type (str)  -- the name of padding layer in conv layers: reflect | replicate | zero
         """
+        self.alpha = alpha
         assert(n_blocks >= 0)
         super(ResnetGenerator, self).__init__()
         if type(norm_layer) == functools.partial:
@@ -461,9 +464,8 @@ class ResnetGenerator(nn.Module):
 
     def forward(self, input):
         """Standard forward"""
-        x = Identity(input)
         out = self.model(input)
-        out = alpha * out + (1 - alpha) * input
+        out = self.alpha * out + (1 - self.alpha) * input
 
         return out
 
