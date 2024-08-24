@@ -6,6 +6,18 @@ import numpy as np
 from torch.nn.init import _calculate_fan_in_and_fan_out
 from timm.models.layers import to_2tuple, trunc_normal_
 
+class Pooling(nn.Module):
+    """
+    Implementation of pooling for PoolFormer
+    --pool_size: pooling size
+    """
+    def __init__(self, pool_size=3):
+        super().__init__()
+        self.pool = nn.AvgPool2d(
+            pool_size, stride=1, padding=pool_size//2, count_include_pad=False)
+
+    def forward(self, x):
+        return self.pool(x) - x
 
 class RLN(nn.Module):
 	r"""Revised LayerNorm"""
@@ -166,6 +178,9 @@ class Attention(nn.Module):
 			self.V = nn.Conv2d(dim, dim, 1)
 			self.proj = nn.Conv2d(dim, dim, 1)
 
+		if self.conv_type == 'Pool':
+			self.pool = Pooling(pool_size=3)			
+
 		if self.use_attn:
 			self.QK = nn.Conv2d(dim, dim * 2, 1)
 			self.attn = WindowAttention(dim, window_size, num_heads)
@@ -239,6 +254,9 @@ class Attention(nn.Module):
 				out = self.conv(X)				# no attention and use conv, no projection
 			elif self.conv_type == 'DWConv':
 				out = self.proj(self.conv(V))
+			elif self.conv_type == 'Pool':
+				out = self.pool(X)
+
 
 		return out
 
@@ -501,7 +519,7 @@ def dehazeformer_t():
 		conv_type=['DWConv', 'DWConv', 'DWConv', 'DWConv', 'DWConv'])
 
 
-def dehazeformer_s():
+def dehazeformer_s_org():
     return DehazeFormer(
 		embed_dims=[24, 48, 96, 48, 24],
 		mlp_ratios=[2., 4., 4., 2., 2.],
@@ -509,6 +527,15 @@ def dehazeformer_s():
 		num_heads=[2, 4, 6, 1, 1],
 		attn_ratio=[1/4, 1/2, 3/4, 0, 0],
 		conv_type=['DWConv', 'DWConv', 'DWConv', 'DWConv', 'DWConv'])
+
+def dehazeformer_s():
+    return DehazeFormer(
+		embed_dims=[12, 24, 48, 24, 12],
+		mlp_ratios=[2., 4., 4., 2., 2.],
+		depths=[4, 4, 4, 4, 4],
+		num_heads=[2, 4, 4, 1, 1],
+		attn_ratio=[1/4, 1/2, 3/4, 0, 0],
+		conv_type=['Pool', 'Pool', 'Pool', 'Pool', 'Pool'])
 
 
 def dehazeformer_b():
