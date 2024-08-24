@@ -424,6 +424,7 @@ class ResnetGenerator(nn.Module):
             padding_type (str)  -- the name of padding layer in conv layers: reflect | replicate | zero
         """
         self.alpha = alpha
+        self.patch_size = 512
         assert(n_blocks >= 0)
         super(ResnetGenerator, self).__init__()
         if type(norm_layer) == functools.partial:
@@ -462,11 +463,20 @@ class ResnetGenerator(nn.Module):
 
         self.model = nn.Sequential(*model)
 
+    def check_image_size(self, x):
+		# NOTE: for I2I test
+        _, _, h, w = x.size()
+        mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
+        mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
+        x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
+        return x
+
     def forward(self, input):
         """Standard forward"""
+        H, W = input.shape[2:]
         out = self.model(input)
         out = self.alpha * out + (1 - self.alpha) * input
-
+        out = out[:, :, :H, :W]
         return out
 
 

@@ -128,10 +128,10 @@ class BaseModel(ABC):
     def get_current_visuals(self):
         """Return visualization images. train.py will display these images with visdom, and save the images to a HTML"""
         visual_ret = OrderedDict()
-        if self.opt.isTrain:
-            pass
-        else:
-            self.visual_names = self.visual_names[0:2]
+        # if self.opt.isTrain:
+        #     pass
+        # else:
+        #     self.visual_names = self.visual_names[0:2]
         for name in self.visual_names:
             if isinstance(name, str):
                 visual_ret[name] = getattr(self, name)
