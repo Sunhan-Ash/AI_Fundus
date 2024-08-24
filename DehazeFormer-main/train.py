@@ -135,6 +135,7 @@ if __name__ == '__main__':
 				avg_psnr = valid(val_loader, network)
 				
 				writer.add_scalar('valid_psnr', avg_psnr, epoch)
+				
 
 				if avg_psnr > best_psnr:
 					best_psnr = avg_psnr
@@ -142,6 +143,7 @@ if __name__ == '__main__':
                 			   os.path.join(save_dir, args.model+'.pth'))
 				
 				writer.add_scalar('best_psnr', best_psnr, epoch)
+				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f}, Best PSNR: {:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr, best_psnr))
 
 	else:
 		print('==> Existing trained model')

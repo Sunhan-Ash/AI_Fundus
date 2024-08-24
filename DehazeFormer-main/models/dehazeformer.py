@@ -532,7 +532,7 @@ def dehazeformer_s():
     return DehazeFormer(
 		embed_dims=[12, 24, 48, 24, 12],
 		mlp_ratios=[2., 4., 4., 2., 2.],
-		depths=[4, 4, 4, 4, 4],
+		depths=[2, 4, 4, 2, 2],
 		num_heads=[2, 4, 4, 1, 1],
 		attn_ratio=[1/4, 1/2, 3/4, 0, 0],
 		conv_type=['Pool', 'Pool', 'Pool', 'Pool', 'Pool'])

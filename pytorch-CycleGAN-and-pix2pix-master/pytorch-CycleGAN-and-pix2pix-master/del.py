@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 # 设置图片文件夹路径
-folder_path = 'your_folder_path_here'
+folder_path = './datasets/large_real/testB'
 
 # 遍历文件夹中的所有文件
 for filename in os.listdir(folder_path):
@@ -14,7 +14,7 @@ for filename in os.listdir(folder_path):
             width, height = img.size
             
             # 检查宽度或高度是否为3215
-            if width == 3215 or height == 3215:
+            if width == 1957 or height == 1957:
                 print(f"Deleting image: {filename} with size {width}x{height}")
                 os.remove(file_path)
     except IOError:
