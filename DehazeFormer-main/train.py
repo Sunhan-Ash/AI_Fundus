@@ -132,7 +132,7 @@ if __name__ == '__main__':
 		writer = SummaryWriter(log_dir=os.path.join(args.log_dir, args.exp, args.model))
 
 		best_psnr = 0
-		best_musiq = 0
+		best_musiq = 56.9492
 		for epoch in tqdm(range(setting['epochs'] + 1)):
 			loss = train(train_loader, network, criterion, optimizer, scaler)
 
