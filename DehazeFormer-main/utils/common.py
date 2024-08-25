@@ -49,6 +49,11 @@ def read_img(filename):
 	img = cv2.imread(filename)
 	return img[:, :, ::-1].astype('float32') / 255.0
 
+def read_resize_img(filename):
+	img = cv2.imread(filename)
+	img = cv2.resize(img, (1440, 1440))
+	return img[:, :, ::-1].astype('float32') / 255.0
+
 
 def write_img(filename, img):
 	img = np.round((img[:, :, ::-1].copy() * 255.0)).astype('uint8')

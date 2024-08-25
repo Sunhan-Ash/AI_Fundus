@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 
 from torch.utils.data import Dataset
-from utils import hwc_to_chw, read_img
+from utils import hwc_to_chw, read_img, read_resize_img
 
 
 def augment(imgs=[], size=256, edge_decay=0., only_h_flip=False):
@@ -73,9 +73,11 @@ class PairLoader(Dataset):
 
 		# read image, and scale [0, 1] to [-1, 1]
 		img_name = self.img_names[idx]
-		source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
-		target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
-		
+		# source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
+		# target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
+		# read_resize_img
+		source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
+		target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1		
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)
 

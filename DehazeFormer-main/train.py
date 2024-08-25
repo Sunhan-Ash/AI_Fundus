@@ -76,7 +76,7 @@ def valid(val_loader, network):
 
 		mse_loss = F.mse_loss(output * 0.5 + 0.5, target_img * 0.5 + 0.5, reduction='none').mean((1, 2, 3))
 		psnr = 10 * torch.log10(1 / mse_loss).mean()
-		musiq_score = musiq(output)
+		musiq_score = musiq(output).mean()
 		PSNR.update(psnr.item(), source_img.size(0))
 		MUSIQ.update(musiq_score.item(), source_img.size(0))
 
@@ -118,7 +118,8 @@ if __name__ == '__main__':
 	val_dataset = PairLoader(dataset_dir, 'test', setting['valid_mode'], 
 							  setting['patch_size'])
 	val_loader = DataLoader(val_dataset,
-                            batch_size=setting['batch_size'],
+                            # batch_size=setting['batch_size'],
+							batch_size=2,
                             num_workers=args.num_workers,
                             pin_memory=True)
 
@@ -132,14 +133,15 @@ if __name__ == '__main__':
 		writer = SummaryWriter(log_dir=os.path.join(args.log_dir, args.exp, args.model))
 
 		best_psnr = 0
-		best_musiq = 56.9492
+		best_musiq = 0
 		for epoch in tqdm(range(setting['epochs'] + 1)):
 			loss = train(train_loader, network, criterion, optimizer, scaler)
 
 			writer.add_scalar('train_loss', loss, epoch)
 
 			scheduler.step()
-
+			torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'last.pth'))
 			if epoch % setting['eval_freq'] == 0:
 				avg_psnr,avg_musiq = valid(val_loader, network)
 				
