@@ -18,22 +18,25 @@ def calculate_psnr_for_directories(dir1, dir2):
     psnr_results = {}
     
     for file1, file2 in image_pairs:
-        image1 = cv2.imread(file1)
-        image2 = cv2.imread(file2)
+        # image1 = cv2.imread(file1)
+        # image2 = cv2.imread(file2)
         
-        if image1 is not None and image2 is not None:
-            psnr_value = calculate_psnr(image1, image2)
-            psnr_results[os.path.basename(file1)] = psnr_value
-        else:
-            print(f"Could not read images: {file1} or {file2}")
-
+        # if image1 is not None and image2 is not None:
+        #     psnr_value = calculate_psnr(image1, image2)
+        #     psnr_results[os.path.basename(file1)] = psnr_value
+        # else:
+        #     print(f"Could not read images: {file1} or {file2}")
+        
+        psnr_value = calculate_psnr(file1, file2)
+        psnr_results[os.path.basename(file1)] = psnr_value
+        
     return psnr_results
 
 # Example usage
 dir1 = './data/fake_temp/train/hazy'
 dir2 = './data/fake_temp/train/GT'
 psnr_results = calculate_psnr_for_directories(dir1, dir2)
-
+print(psnr_results)
 # Print PSNR results
-for filename, psnr in psnr_results.items():
-    print(f"{filename}: PSNR = {psnr:.2f} dB")
+# for filename, psnr in psnr_results.items():
+#     print(f"{filename}: PSNR = {psnr:.2f} dB")
