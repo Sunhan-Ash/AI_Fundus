@@ -6,8 +6,8 @@ import shutil
 source_folder = './pytorch-CycleGAN-and-pix2pix-master/results/EyeQ_cyclegan_new/test_latest/images'
 
 # 目标文件夹路径
-input_folder = '../DehazeFormer-main/data/fake_Eye/hazy'
-gt_folder = '../DehazeFormer-main/data/fake_Eye/GT'
+input_folder = '../DehazeFormer-main/data/fake_temp/train/hazy'
+gt_folder = '../DehazeFormer-main/data/fake_temp/train/GT'
 
 # 确保目标文件夹存在
 os.makedirs(input_folder, exist_ok=True)

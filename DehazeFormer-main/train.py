@@ -12,6 +12,11 @@ from tqdm import tqdm
 from utils import AverageMeter
 from datasets.loader import PairLoader
 from models import *
+import pyiqa
+
+musiq = pyiqa.create_metric("musiq", device="cuda:0")
+
+# PIQE = pyiqa.create_metric("piqe")
 
 
 parser = argparse.ArgumentParser()
@@ -56,6 +61,7 @@ def train(train_loader, network, criterion, optimizer, scaler):
 
 def valid(val_loader, network):
 	PSNR = AverageMeter()
+	MUSIQ = AverageMeter()
 
 	torch.cuda.empty_cache()
 
@@ -70,9 +76,11 @@ def valid(val_loader, network):
 
 		mse_loss = F.mse_loss(output * 0.5 + 0.5, target_img * 0.5 + 0.5, reduction='none').mean((1, 2, 3))
 		psnr = 10 * torch.log10(1 / mse_loss).mean()
+		musiq_score = musiq(output)
 		PSNR.update(psnr.item(), source_img.size(0))
+		MUSIQ.update(musiq_score.item(), source_img.size(0))
 
-	return PSNR.avg
+	return PSNR.avg, MUSIQ.avg
 
 
 if __name__ == '__main__':
@@ -124,6 +132,7 @@ if __name__ == '__main__':
 		writer = SummaryWriter(log_dir=os.path.join(args.log_dir, args.exp, args.model))
 
 		best_psnr = 0
+		best_musiq = 0
 		for epoch in tqdm(range(setting['epochs'] + 1)):
 			loss = train(train_loader, network, criterion, optimizer, scaler)
 
@@ -132,18 +141,23 @@ if __name__ == '__main__':
 			scheduler.step()
 
 			if epoch % setting['eval_freq'] == 0:
-				avg_psnr = valid(val_loader, network)
+				avg_psnr,avg_musiq = valid(val_loader, network)
 				
 				writer.add_scalar('valid_psnr', avg_psnr, epoch)
-				
 
 				if avg_psnr > best_psnr:
 					best_psnr = avg_psnr
 					torch.save({'state_dict': network.state_dict()},
-                			   os.path.join(save_dir, args.model+'.pth'))
+                			   os.path.join(save_dir, args.model+'psnr.pth'))
+					
+				if avg_musiq > best_musiq:
+					best_musiq = avg_musiq
+					torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'musiq.pth'))
+						
 				
 				writer.add_scalar('best_psnr', best_psnr, epoch)
-				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f}, Best PSNR: {:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr, best_psnr))
+				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f},MUSIQ:{:.4f}, Best PSNR: {:.4f}, Best MUSIQ: {:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr,avg_musiq, best_psnr, best_musiq))
 
 	else:
 		print('==> Existing trained model')
