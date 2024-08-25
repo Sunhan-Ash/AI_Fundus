@@ -535,7 +535,7 @@ def dehazeformer_s():
 		depths=[2, 4, 4, 2, 2],
 		num_heads=[2, 4, 4, 1, 1],
 		attn_ratio=[1/4, 1/2, 3/4, 0, 0],
-		conv_type=['Pool', 'Pool', 'Pool', 'Pool', 'Pool'])
+		conv_type=['DWConv', 'Pool', 'Pool', 'Pool', 'DWConv'])
 
 
 def dehazeformer_b():
