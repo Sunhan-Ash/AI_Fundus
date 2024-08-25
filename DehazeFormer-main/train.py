@@ -26,7 +26,7 @@ parser.add_argument('--no_autocast', action='store_false', default=True, help='d
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs')
-parser.add_argument('--dataset', default='fake_Eye', type=str, help='dataset name')
+parser.add_argument('--dataset', default='fake_temp', type=str, help='dataset name')
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
 args = parser.parse_args()
