@@ -3,14 +3,16 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pytorch_msssim import ssim
+# from pytorch_msssim import ssim
 from torch.utils.data import DataLoader
 from collections import OrderedDict
 
 from utils import AverageMeter, write_img, chw_to_hwc
 from datasets.loader import PairLoader
 from models import *
+import pyiqa
 
+ssim = pyiqa.create_metric('ssim',device='cuda:0')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', default='dehazeformer-s', type=str, help='model name')
@@ -18,7 +20,7 @@ parser.add_argument('--num_workers', default=16, type=int, help='number of worke
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--result_dir', default='./results/', type=str, help='path to results saving')
-parser.add_argument('--dataset', default='RESIDE-IN', type=str, help='dataset name')
+parser.add_argument('--dataset', default='fake_Eye2', type=str, help='dataset name')
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 args = parser.parse_args()
 
@@ -62,9 +64,8 @@ def test(test_loader, network, result_dir):
 
 			_, _, H, W = output.size()
 			down_ratio = max(1, round(min(H, W) / 256))		# Zhou Wang
-			ssim_val = ssim(F.adaptive_avg_pool2d(output, (int(H / down_ratio), int(W / down_ratio))), 
-							F.adaptive_avg_pool2d(target, (int(H / down_ratio), int(W / down_ratio))), 
-							data_range=1, size_average=False).item()				
+			ssim_val = ssim(output, 
+							target).item()				
 
 		PSNR.update(psnr_val)
 		SSIM.update(ssim_val)
