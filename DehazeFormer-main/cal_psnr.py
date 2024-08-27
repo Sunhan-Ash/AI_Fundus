@@ -6,7 +6,8 @@ from utils import AverageMeter
 import torch
 
 calculate_psnr = pyiqa.create_metric('psnr', device = 'cuda:0')
-calculate_MUSIQ = pyiqa.create_metric('musiq', device = 'cuda:0')
+calculate_MUSIQ = pyiqa.create_metric('piqe', device = 'cuda:0')
+# calculate_FID = pyiqa.create_metric('fid', device = 'cuda:0')
 
 def get_image_pairs(dir1, dir2):
     """Get list of common image file paths in two directories."""
