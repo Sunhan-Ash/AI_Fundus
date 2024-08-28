@@ -9,8 +9,8 @@ from degrad_de import *
 
 import json
 
-sizeX = 512
-sizeY = 512
+# sizeX = 512
+# sizeY = 512
 
 
 type_list = ['001', '010', '011', '100', '101', '110', '111']
@@ -24,14 +24,15 @@ def process(image_list):
         name = name_ext.split('.')[0]
         
         img = Image.open(image_path).convert('RGB')
+        sizeX ,sizeY = img.size
         mask = Image.open(mask_path).convert('L')
-        mask = mask.resize((sizeX, sizeY), Image.BICUBIC)
+        # mask = mask.resize((sizeX, sizeY), Image.BICUBIC)
         mask = np.expand_dims(mask, axis=2)
         mask = np.array(mask, np.float32).transpose(2, 0, 1)/255.0
         
         for t in type_list:
             r_img, r_params = DE_process(img, mask, sizeX, sizeY, t)
-            dst_img = os.path.join('./data/de_image', name+'_'+t+'.jpeg')
+            dst_img = os.path.join('./data/de_image', name+'_'+t+'.png')
             imwrite(dst_img, r_img)
             param_dict = {'name':name_ext, 'type':t, 'params':r_params}
             with open(os.path.join('./data/de_js_file', name+'_'+t+'.json'), 'w') as json_file:
@@ -40,7 +41,7 @@ def process(image_list):
         
 if __name__=="__main__":
     
-    image_list = glob.glob(os.path.join('./data/image/', '*.jpeg'))
+    image_list = glob.glob(os.path.join('./data/image/', '*.png'))
                 
     patches = 16
     patch_len = int(len(image_list)/patches)
