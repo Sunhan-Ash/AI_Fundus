@@ -40,8 +40,8 @@ def train(train_loader, network, criterion, optimizer, scaler):
 	torch.cuda.empty_cache()
 	
 	network.train()
-
-	for batch in train_loader:
+	for batch in tqdm(train_loader, desc="Training", unit="batch"):
+	# for batch in train_loader:
 		source_img = batch['source'].cuda()
 		target_img = batch['target'].cuda()
 
@@ -67,8 +67,8 @@ def valid(val_loader, network):
 	torch.cuda.empty_cache()
 
 	network.eval()
-
-	for batch in val_loader:
+	for batch in tqdm(val_loader, desc="Testing", unit="batch"):
+	# for batch in val_loader:
 		source_img = batch['source'].cuda()
 		target_img = batch['target'].cuda()
 
@@ -82,8 +82,8 @@ def valid(val_loader, network):
 		PSNR.update(psnr.item(), source_img.size(0))
 		MUSIQ.update(musiq_score.item(), source_img.size(0))
 		PIQE.update(piqe_score.item(), source_img.size(0))
-
 	return PSNR.avg, MUSIQ.avg, PIQE.avg
+	# return PSNR.avg, MUSIQ.avg, PIQE.avg
 
 
 if __name__ == '__main__':
@@ -138,7 +138,7 @@ if __name__ == '__main__':
 		best_psnr = 0
 		best_musiq = 0
 		best_piqe = 1000
-		for epoch in tqdm(range(setting['epochs'] + 1)):
+		for epoch in range(setting['epochs'] + 1):
 			loss = train(train_loader, network, criterion, optimizer, scaler)
 
 			writer.add_scalar('train_loss', loss, epoch)
@@ -167,7 +167,7 @@ if __name__ == '__main__':
 						
 				
 				writer.add_scalar('best_psnr', best_psnr, epoch)
-				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f},MUSIQ:{:.4f}, Best PSNR: {:.4f}, Best MUSIQ: {:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr,avg_musiq, best_psnr, best_musiq))
+				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f},MUSIQ:{:.4f}, PIQE:{:.4f}, Best PSNR: {:.4f}, Best MUSIQ: {:.4f}, Besy PIQE:{:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr,avg_musiq, avg_piqe, best_psnr, best_musiq,best_piqe))
 
 	else:
 		print('==> Existing trained model')
