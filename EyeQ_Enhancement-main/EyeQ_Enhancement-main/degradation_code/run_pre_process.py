@@ -29,7 +29,8 @@ def process(image_list):  # 定义处理图像的函数
         #     continue  # 跳过当前图像，继续处理下一个图像
 
 if __name__=="__main__":  # 主程序入口
-    image_list = glob.glob(os.path.join('/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/GT', '*.png'))  # 获取所有JPEG格式的图像路径列表
+    image_list = glob.glob(os.path.join('/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/fake_temp/test/GT', '*.jpg'))  # 获取所有JPEG格式的图像路径列表
+    print("Image list:", image_list)  
     patches = 16  # 定义要分割的子任务数量
     patch_len = int(len(image_list) / patches)  # 计算每个子任务中包含的图像数量
     filesPatchList = []  # 创建一个空列表，用于存储子任务的图像列表

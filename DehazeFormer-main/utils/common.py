@@ -49,6 +49,11 @@ def read_img(filename):
 	img = cv2.imread(filename)
 	return img[:, :, ::-1].astype('float32') / 255.0
 
+def read_mask(filename):
+	img = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)  # 读取为单通道图像
+	img = cv2.resize(img, (1440, 1440))
+	return img.astype('float32') / 255.0 
+
 def read_resize_img(filename):
 	img = cv2.imread(filename)
 	img = cv2.resize(img, (1440, 1440))

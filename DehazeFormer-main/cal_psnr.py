@@ -59,8 +59,8 @@ def calculate_musiq_for_directories(dir1, dir2):
     return MUSIQ.avg
 
 # Example usage
-dir1 = './data/fake_temp/test/hazy'
-dir2 = './data/fake_temp/test/GT'
+dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/test/hazy'
+dir2 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/test/GT'
 # psnr_results = calculate_psnr_for_directories(dir1, dir2)
 # print(psnr_results)
 musiq_results = calculate_musiq_for_directories(dir1, dir2)

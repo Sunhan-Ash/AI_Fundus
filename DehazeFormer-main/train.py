@@ -16,7 +16,7 @@ import pyiqa
 
 musiq = pyiqa.create_metric("musiq", device="cuda:0")
 
-# PIQE = pyiqa.create_metric("piqe")
+piqe = pyiqa.create_metric("piqe", device="cuda:0")
 
 
 parser = argparse.ArgumentParser()
@@ -26,7 +26,7 @@ parser.add_argument('--no_autocast', action='store_false', default=True, help='d
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs')
-parser.add_argument('--dataset', default='fake_temp', type=str, help='dataset name')
+parser.add_argument('--dataset', default='eye_degrade', type=str, help='dataset name')
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
 args = parser.parse_args()
@@ -62,6 +62,7 @@ def train(train_loader, network, criterion, optimizer, scaler):
 def valid(val_loader, network):
 	PSNR = AverageMeter()
 	MUSIQ = AverageMeter()
+	PIQE = AverageMeter()
 
 	torch.cuda.empty_cache()
 
@@ -77,10 +78,12 @@ def valid(val_loader, network):
 		mse_loss = F.mse_loss(output * 0.5 + 0.5, target_img * 0.5 + 0.5, reduction='none').mean((1, 2, 3))
 		psnr = 10 * torch.log10(1 / mse_loss).mean()
 		musiq_score = musiq(output).mean()
+		piqe_score = piqe(output).mean()
 		PSNR.update(psnr.item(), source_img.size(0))
 		MUSIQ.update(musiq_score.item(), source_img.size(0))
+		PIQE.update(piqe_score.item(), source_img.size(0))
 
-	return PSNR.avg, MUSIQ.avg
+	return PSNR.avg, MUSIQ.avg, PIQE.avg
 
 
 if __name__ == '__main__':
@@ -134,6 +137,7 @@ if __name__ == '__main__':
 
 		best_psnr = 0
 		best_musiq = 0
+		best_piqe = 1000
 		for epoch in tqdm(range(setting['epochs'] + 1)):
 			loss = train(train_loader, network, criterion, optimizer, scaler)
 
@@ -143,7 +147,7 @@ if __name__ == '__main__':
 			torch.save({'state_dict': network.state_dict()},
                 			   os.path.join(save_dir, args.model+'last.pth'))
 			if epoch % setting['eval_freq'] == 0:
-				avg_psnr,avg_musiq = valid(val_loader, network)
+				avg_psnr,avg_musiq,avg_piqe = valid(val_loader, network)
 				
 				writer.add_scalar('valid_psnr', avg_psnr, epoch)
 
@@ -156,6 +160,10 @@ if __name__ == '__main__':
 					best_musiq = avg_musiq
 					torch.save({'state_dict': network.state_dict()},
                 			   os.path.join(save_dir, args.model+'musiq.pth'))
+				if avg_piqe < best_piqe:
+					best_piqe = avg_piqe
+					torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'piqe.pth'))	
 						
 				
 				writer.add_scalar('best_psnr', best_psnr, epoch)

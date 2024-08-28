@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 
 from torch.utils.data import Dataset
-from utils import hwc_to_chw, read_img, read_resize_img
+from utils import hwc_to_chw, read_img, read_resize_img,read_mask
 
 
 def augment(imgs=[], size=256, edge_decay=0., only_h_flip=False):
@@ -61,7 +61,8 @@ class PairLoader(Dataset):
 		self.only_h_flip = only_h_flip
 
 		self.root_dir = os.path.join(data_dir, sub_dir)
-		self.img_names = sorted(os.listdir(os.path.join(self.root_dir, 'GT')))
+		self.img_names = sorted(os.listdir(os.path.join(self.root_dir, 'hazy')))
+		
 		self.img_num = len(self.img_names)
 
 	def __len__(self):
@@ -72,15 +73,23 @@ class PairLoader(Dataset):
 		cv2.ocl.setUseOpenCL(False)
 
 		# read image, and scale [0, 1] to [-1, 1]
+		#这里读取的img的图片名是hazy的，命名格式是0001_001.png，所以对应的GT的文件名是0001.png
 		img_name = self.img_names[idx]
+		#这里
+		org_image_name = img_name.split('_')[0]
+		org_image_name = org_image_name +'.' +img_name.split('.')[-1]
+
 		# source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
 		# target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
 		# read_resize_img
 		source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
-		target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1		
+		# mask_img = read_mask(os.path.join(self.root_dir, 'mask', org_image_name))
+		# if len(mask_img.shape) == 2:
+		# 	mask_img = np.expand_dims(mask_img, axis=-1)  # 扩展维度，使其形状为 (H, W, 1)
+		target_img = read_resize_img(os.path.join(self.root_dir, 'GT', org_image_name)) * 2 - 1		
+		# source_img = source_img * mask_img
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)
-
 		if self.mode == 'valid':
 			[source_img, target_img] = align([source_img, target_img], self.size)
 
