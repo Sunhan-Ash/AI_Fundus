@@ -1,6 +1,6 @@
 {
-    "batch_size": 4,
-    "patch_size": 512,
+    "batch_size": 16,
+    "patch_size": 256,
     "valid_mode": "test",
     "edge_decay": 0,
     "only_h_flip": false,
