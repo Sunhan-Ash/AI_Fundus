@@ -42,7 +42,7 @@ def imwrite(file_path,image):
 def remove_back_area(img,bbox=None,border=None):
     image=img
     if border is None:
-        border=np.array((bbox[0],bbox[0]+bbox[2],bbox[1],bbox[1]+bbox[3],img.shape[0],img.shape[1]),dtype=np.int)
+        border=np.array((bbox[0],bbox[0]+bbox[2],bbox[1],bbox[1]+bbox[3],img.shape[0],img.shape[1]),dtype=np.int32)
     image=image[border[0]:border[1],border[2]:border[3],...]
     return image,border
 

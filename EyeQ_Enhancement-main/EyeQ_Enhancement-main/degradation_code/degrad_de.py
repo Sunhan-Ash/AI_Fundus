@@ -48,8 +48,8 @@ def DE_HALO(img, h, w, brightness_factor, center=None, radius=None):
         num = random.randint(1, 2)
     else:
         num = random.randint(0, 2)
-    w0_a = random.randint(w/2-int(w/8),w/2+int(w/8))
-    h0_a = random.randint(h/2-int(h/8),h/2+int(h/8))
+    w0_a = random.randint(int(w/2)-int(w/8),int(w/2)+int(w/8))
+    h0_a = random.randint(int(h/2)-int(h/8),int(h/2)+int(h/8))
     center_a = [w0_a, h0_a]
 
     wei_dia_a =0.75 + (1.0-0.75) * random.random()
@@ -119,7 +119,7 @@ def DE_HOLE(img, h, w, region_mask, center=None, diameter=None):
     #  define the center based on the position of disc/cup
     diameter_circle = random.randint(int(0.4 * w), int(0.7 * w))
 
-    center =[random.randint(w/4,w*3/4),random.randint(h*3/8,h*5/8)]
+    center =[random.randint(int(w/4),w-int(w/4)),random.randint(int(h*3/8),h-int(h*3/8))]
     Y, X = np.ogrid[:h, :w]
     dist_from_center = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2)
     circle = dist_from_center <= (int(diameter_circle/2))

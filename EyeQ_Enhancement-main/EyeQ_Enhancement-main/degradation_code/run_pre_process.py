@@ -9,26 +9,27 @@ import csv  # 用于CSV文件的读写操作
 from PIL import ImageFile  # 用于处理图像文件
 ImageFile.LOAD_TRUNCATED_IMAGES = True  # 设置为True可以加载部分图像（即使图像被截断）
 
-dsize = (512, 512)  # 定义图像大小为512x512
+# dsize = (1440, 1440)  # 定义图像大小为512x512
 
 def process(image_list):  # 定义处理图像的函数
     for image_path in image_list:  # 遍历图像路径列表
         name = image_path.split('/')[-1]  # 获取图像文件名
-        dst_image_path = os.path.join('./data/image', name)  # 定义处理后的图像保存路径
-        dst_mask_path = os.path.join('./data/mask', name)  # 定义处理后的掩码图像保存路径
-        try:
-            img = imread(image_path)  # 读取图像
-            img, mask = preprocess(img)  # 预处理图像，返回图像和对应的掩码
-            # img = cv.resize(img, dsize)  # 调整图像大小
-            # mask = cv.resize(mask, dsize)  # 调整掩码大小
-            imwrite(dst_image_path, img)  # 保存处理后的图像
-            imwrite(dst_mask_path, mask)  # 保存处理后的掩码
-        except:
-            print(image_path)  # 如果处理过程中出现错误，打印出错的图像路径
-            continue  # 跳过当前图像，继续处理下一个图像
+        dst_image_path = os.path.join('/media/xusunhan/ZhiTai/AI_fundus/EyeQ_Enhancement-main/EyeQ_Enhancement-main/degradation_code/data/image/', name)  # 定义处理后的图像保存路径
+        dst_mask_path = os.path.join('/media/xusunhan/ZhiTai/AI_fundus/EyeQ_Enhancement-main/EyeQ_Enhancement-main/degradation_code/data/mask/', name)  # 定义处理后的掩码图像保存路径
+        # try:
+        img = imread(image_path)  # 读取图像
+        img, mask = preprocess(img)  # 预处理图像，返回图像和对应的掩码
+        # img = cv.resize(img, dsize)  # 调整图像大小
+        # mask = cv.resize(mask, dsize)  # 调整掩码大小
+        imwrite(dst_image_path, img)  # 保存处理后的图像
+        imwrite(dst_mask_path, mask)  # 保存处理后的掩码
+        # except:
+        #     print("Error processing image: ")
+        #     print(image_path)  # 如果处理过程中出现错误，打印出错的图像路径
+        #     continue  # 跳过当前图像，继续处理下一个图像
 
 if __name__=="__main__":  # 主程序入口
-    image_list = glob.glob(os.path.join('./data/sample', '*.png'))  # 获取所有JPEG格式的图像路径列表
+    image_list = glob.glob(os.path.join('/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/GT', '*.png'))  # 获取所有JPEG格式的图像路径列表
     patches = 16  # 定义要分割的子任务数量
     patch_len = int(len(image_list) / patches)  # 计算每个子任务中包含的图像数量
     filesPatchList = []  # 创建一个空列表，用于存储子任务的图像列表
