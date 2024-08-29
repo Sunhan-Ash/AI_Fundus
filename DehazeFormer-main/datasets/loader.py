@@ -75,22 +75,23 @@ class PairLoader(Dataset):
 		# read image, and scale [0, 1] to [-1, 1]
 		#这里读取的img的图片名是hazy的，命名格式是0001_001.png，所以对应的GT的文件名是0001.png
 		img_name = self.img_names[idx]
-		#这里
-		org_image_name = img_name.split('_')[0]
-		org_image_name = org_image_name +'.' +img_name.split('.')[-1]
-
+		if self.mode == 'train':
+			target_image_name = img_name.split('_')[0]
+			target_image_name = target_image_name +'.' +img_name.split('.')[-1]
+		else:
+			target_image_name = img_name
 		# source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
-		# target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
+		# target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
 		# read_resize_img
 		source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
 		# mask_img = read_mask(os.path.join(self.root_dir, 'mask', org_image_name))
 		# if len(mask_img.shape) == 2:
 		# 	mask_img = np.expand_dims(mask_img, axis=-1)  # 扩展维度，使其形状为 (H, W, 1)
-		if self.mode == 'train':
-			target_img = read_resize_img(os.path.join(self.root_dir, 'GT', org_image_name)) * 2 - 1
-		if self.mode == 'valid':
-			target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
-				
+		# if self.mode == 'train':
+		# 	target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1
+		# if self.mode == 'valid':
+		# 	target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
+		target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1		
 		# source_img = source_img * mask_img
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)

@@ -26,7 +26,7 @@ parser.add_argument('--no_autocast', action='store_false', default=True, help='d
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs')
-parser.add_argument('--dataset', default='eye_degrade', type=str, help='dataset name')
+parser.add_argument('--dataset', default='eye_degrade', type=str, help='dataset name')# eye_degrade
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
 args = parser.parse_args()
@@ -73,9 +73,10 @@ def valid(val_loader, network):
 		target_img = batch['target'].cuda()
 
 		with torch.no_grad():							# torch.no_grad() may cause warning
-			output = network(source_img).clamp_(-1, 1)		
+			output = network(source_img).clamp_(-1, 1)
+			output = output * 0.5 + 0.5		
 
-		mse_loss = F.mse_loss(output * 0.5 + 0.5, target_img * 0.5 + 0.5, reduction='none').mean((1, 2, 3))
+		mse_loss = F.mse_loss(output, target_img * 0.5 + 0.5, reduction='none').mean((1, 2, 3))
 		psnr = 10 * torch.log10(1 / mse_loss).mean()
 		musiq_score = musiq(output).mean()
 		piqe_score = piqe(output).mean()
