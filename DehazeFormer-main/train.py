@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.cuda.amp import autocast, GradScaler
 from torch.utils.data import DataLoader
+from collections import OrderedDict
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
 
@@ -29,6 +30,7 @@ parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs
 parser.add_argument('--dataset', default='eye_degrade', type=str, help='dataset name')# eye_degrade
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
+parser.add_argument('--resume', default='False', type=bool, help='continue training from last checkpoint')
 args = parser.parse_args()
 
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -86,6 +88,15 @@ def valid(val_loader, network):
 	return PSNR.avg, MUSIQ.avg, PIQE.avg
 	# return PSNR.avg, MUSIQ.avg, PIQE.avg
 
+def single(save_dir):
+	state_dict = torch.load(save_dir)['state_dict']
+	new_state_dict = OrderedDict()
+
+	for k, v in state_dict.items():
+		name = k[7:]
+		new_state_dict[name] = v
+
+	return new_state_dict
 
 if __name__ == '__main__':
 	setting_filename = os.path.join('configs', args.exp, args.model+'.json')
@@ -170,6 +181,47 @@ if __name__ == '__main__':
 				writer.add_scalar('best_psnr', best_psnr, epoch)
 				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f},MUSIQ:{:.4f}, PIQE:{:.4f}, Best PSNR: {:.4f}, Best MUSIQ: {:.4f}, Besy PIQE:{:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr,avg_musiq, avg_piqe, best_psnr, best_musiq,best_piqe))
 
-	else:
+	elif not os.path.exists(os.path.join(save_dir, args.model+'.pth')) and args.resume:
+		saved_model_dir = os.path.join(save_dir,args.model+'.pth')
+		network.load_state_dict(single(saved_model_dir))
+		print('==> Continue training, current model name: ' + args.model)
+
+		writer = SummaryWriter(log_dir=os.path.join(args.log_dir, args.exp, args.model))
+
+		best_psnr = 0
+		best_musiq = 0
+		best_piqe = 1000
+
+		for epoch in range(setting['epochs'] + 1):
+			loss = train(train_loader, network, criterion, optimizer, scaler)
+
+			writer.add_scalar('train_loss', loss, epoch)
+
+			scheduler.step()
+			torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'last.pth'))
+			if epoch % setting['eval_freq'] == 0:
+				avg_psnr,avg_musiq,avg_piqe = valid(val_loader, network)
+				
+				writer.add_scalar('valid_psnr', avg_psnr, epoch)
+
+				if avg_psnr > best_psnr:
+					best_psnr = avg_psnr
+					torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'psnr.pth'))
+					
+				if avg_musiq > best_musiq:
+					best_musiq = avg_musiq
+					torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'musiq.pth'))
+				if avg_piqe < best_piqe:
+					best_piqe = avg_piqe
+					torch.save({'state_dict': network.state_dict()},
+                			   os.path.join(save_dir, args.model+'piqe.pth'))	
+						
+				
+				writer.add_scalar('best_psnr', best_psnr, epoch)
+				print('Epoch: [{}/{}], Loss: {:.4f}, PSNR: {:.4f},MUSIQ:{:.4f}, PIQE:{:.4f}, Best PSNR: {:.4f}, Best MUSIQ: {:.4f}, Besy PIQE:{:.4f}'.format(epoch, setting['epochs'], loss, avg_psnr,avg_musiq, avg_piqe, best_psnr, best_musiq,best_piqe))
+	else:	
 		print('==> Existing trained model')
 		exit(1)
