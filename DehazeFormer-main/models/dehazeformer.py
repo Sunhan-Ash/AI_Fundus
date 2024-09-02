@@ -472,6 +472,7 @@ class DehazeFormer(nn.Module):
 		_, _, h, w = x.size()
 		mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
 		mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
+		print(mod_pad_h, mod_pad_w)
 		x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
 		return x
 
@@ -586,3 +587,9 @@ def dehazeformer_l():
 		num_heads=[2, 4, 6, 1, 1],
 		attn_ratio=[1/4, 1/2, 3/4, 0, 0],
 		conv_type=['Conv', 'Conv', 'Conv', 'Conv', 'Conv'])
+
+if __name__ == '__main__':
+	model = dehazeformer_s()
+	x = torch.randn(1, 3, 256, 256)
+	y = model(x)
+	print(y.shape)
