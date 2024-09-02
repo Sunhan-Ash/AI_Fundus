@@ -6,7 +6,8 @@ from utils import AverageMeter
 import torch
 
 calculate_psnr = pyiqa.create_metric('psnr', device = 'cuda:0')
-calculate_MUSIQ = pyiqa.create_metric('piqe', device = 'cpu')
+calculate_MUSIQ = pyiqa.create_metric('musiq', device = 'cuda:0')
+calculate_PIQE = pyiqa.create_metric('piqe', device = 'cuda:0')
 # calculate_FID = pyiqa.create_metric('fid', device = 'cuda:0')
 
 def get_image_pairs(dir1, dir2):
@@ -41,6 +42,7 @@ def calculate_musiq_for_directories(dir1, dir2):
     """Calculate PSNR for images in two directories with the same filenames."""
     image_pairs = get_image_pairs(dir1, dir2)
     MUSIQ = AverageMeter()
+    PIQE =AverageMeter()
     torch.cuda.empty_cache()
     
     for file1, file2 in image_pairs:
@@ -54,9 +56,16 @@ def calculate_musiq_for_directories(dir1, dir2):
         #     print(f"Could not read images: {file1} or {file2}")
         
         musiq_value = calculate_MUSIQ(file1)
+        piqe_value = calculate_PIQE(file1)
         MUSIQ.update(musiq_value.item())
+        PIQE.update(piqe_value.item())
+        print(
+			  'PIQE: {piqe.val:.04f} ({piqe.avg:.04f})\t'
+			  'MUSIQ: {musiq.val:.04f} ({musiq.avg:.04f})\t'
+			  .format(piqe=PIQE, musiq=MUSIQ))
+
         
-    return MUSIQ.avg
+    return MUSIQ.avg, PIQE.avg
 
 # Example usage
 dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/test/hazy'

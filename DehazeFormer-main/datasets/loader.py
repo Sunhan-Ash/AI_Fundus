@@ -80,11 +80,13 @@ class PairLoader(Dataset):
 			target_image_name = target_image_name +'.' +img_name.split('.')[-1]
 		else:
 			target_image_name = img_name
+		# target_image_name = img_name.split('_')[0]
+		# target_image_name = target_image_name +'.' +img_name.split('.')[-1]
 		# source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
 		# target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
 		# read_resize_img
 		source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
-		# mask_img = read_mask(os.path.join(self.root_dir, 'mask', org_image_name))
+		mask_img = read_mask(os.path.join(self.root_dir, 'mask', target_image_name))
 		# if len(mask_img.shape) == 2:
 		# 	mask_img = np.expand_dims(mask_img, axis=-1)  # 扩展维度，使其形状为 (H, W, 1)
 		# if self.mode == 'train':
@@ -95,8 +97,10 @@ class PairLoader(Dataset):
 		# source_img = source_img * mask_img
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)
-		if self.mode == 'valid':
+		elif self.mode == 'valid':
 			[source_img, target_img] = align([source_img, target_img], self.size)
+		else:
+			return {'source': hwc_to_chw(source_img), 'target': hwc_to_chw(target_img), 'mask':mask_img, 'filename': img_name}
 
 		return {'source': hwc_to_chw(source_img), 'target': hwc_to_chw(target_img), 'filename': img_name}
 
