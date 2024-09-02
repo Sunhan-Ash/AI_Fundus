@@ -21,7 +21,7 @@ parser.add_argument('--num_workers', default=16, type=int, help='number of worke
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--result_dir', default='./results/', type=str, help='path to results saving')
-parser.add_argument('--dataset', default='eye_degrade', type=str, help='dataset name')
+parser.add_argument('--dataset', default='eye_degrade_last', type=str, help='dataset name')
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 args = parser.parse_args()
 

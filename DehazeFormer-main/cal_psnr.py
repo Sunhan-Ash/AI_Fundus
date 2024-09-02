@@ -68,8 +68,8 @@ def calculate_musiq_for_directories(dir1, dir2):
     return MUSIQ.avg, PIQE.avg
 
 # Example usage
-dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/test/hazy'
-dir2 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade/test/GT'
+dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/results/eye_degrade/dehazeformer-s/imgs'
+dir2 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/results/eye_degrade/dehazeformer-s/imgs'
 # psnr_results = calculate_psnr_for_directories(dir1, dir2)
 # print(psnr_results)
 musiq_results = calculate_musiq_for_directories(dir1, dir2)
