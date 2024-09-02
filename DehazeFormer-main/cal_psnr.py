@@ -56,9 +56,9 @@ def calculate_musiq_for_directories(dir1, dir2):
         #     print(f"Could not read images: {file1} or {file2}")
         
         musiq_value = calculate_MUSIQ(file1)
-        piqe_value = calculate_PIQE(file1)
+        # piqe_value = calculate_PIQE(file1)
         MUSIQ.update(musiq_value.item())
-        PIQE.update(piqe_value.item())
+        # PIQE.update(piqe_value.item())
         print(
 			  'PIQE: {piqe.val:.04f} ({piqe.avg:.04f})\t'
 			  'MUSIQ: {musiq.val:.04f} ({musiq.avg:.04f})\t'
@@ -68,8 +68,8 @@ def calculate_musiq_for_directories(dir1, dir2):
     return MUSIQ.avg, PIQE.avg
 
 # Example usage
-dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/results/eye_degrade/dehazeformer-s/imgs'
-dir2 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/results/eye_degrade/dehazeformer-s/imgs'
+dir1 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade_last/test2/hazy'
+dir2 = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_degrade_last/test2/hazy'
 # psnr_results = calculate_psnr_for_directories(dir1, dir2)
 # print(psnr_results)
 musiq_results = calculate_musiq_for_directories(dir1, dir2)

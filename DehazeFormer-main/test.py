@@ -53,7 +53,7 @@ def test(test_loader, network, result_dir):
 	for idx, batch in enumerate(test_loader):
 		input = batch['source'].cuda()
 		target = batch['target'].cuda()
-		mask = batch['mask'].cuda()
+		# mask = batch['mask'].cuda()
 
 		filename = batch['filename'][0]
 
