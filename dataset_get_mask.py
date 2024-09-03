@@ -1,3 +1,5 @@
+
+#### 有问题，别用
 import cv2
 import numpy as np
 import os
@@ -5,7 +7,7 @@ from glob import glob
 
 # 定义加载图像的目录和保存掩码的目录
 source_dirs = ['./dataset/diabetic-retinopathy-detection/quality_0']
-mask_base_dir = './dataset/diabetic-retinopathy-detection/quality_0/mask'
+mask_base_dir = './dataset/diabetic-retinopathy-detection/mask'
 
 # 创建保存掩码的目录
 os.makedirs(mask_base_dir, exist_ok=True)
