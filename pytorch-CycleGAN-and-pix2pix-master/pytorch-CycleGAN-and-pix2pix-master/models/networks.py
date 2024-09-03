@@ -394,7 +394,7 @@ class OurResnetBlock(nn.Module):
 
     def build_conv_block(self, dim, padding_type, norm_layer, use_dropout, use_bias):
         conv_block = []
-
+        p = 0
         conv_block += [nn.Conv2d(dim, dim, kernel_size=3, padding=p, bias=use_bias), norm_layer(dim), nn.ReLU(True)]
         if use_dropout:
             conv_block += [nn.Dropout(0.5)]

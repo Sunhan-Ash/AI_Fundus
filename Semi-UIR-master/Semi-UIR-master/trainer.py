@@ -38,7 +38,8 @@ class Trainer:
         self.loss_cr = ContrastLoss().cuda()
         self.consistency = 0.2
         self.consistency_rampup = 100.0
-        self.iqa_metric = pyiqa.create_metric('musiq', as_loss=True).cuda()
+        self.iqa_metric = pyiqa.create_metric('piqe', as_loss=True).cuda()
+        # self.iqa_metric = pyiqa.create_metric('musiq', as_loss=True).cuda()
         vgg_model = vgg16(pretrained=True).features[:16]
         vgg_model = vgg_model.cuda()
         self.loss_per = PerpetualLoss(vgg_model).cuda()
