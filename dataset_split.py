@@ -3,7 +3,7 @@ import shutil
 
 # 定义包含图片的源目录和目标基目录
 source_dir = 'train'  # 假设 'train' 是包含图片的文件夹
-destination_base_dir = './dataset/'
+destination_base_dir = './dataset/diabetic-retinopathy-detection/'
 
 # 为每个质量标签创建新的文件夹
 quality_labels = df['quality'].unique()  # 获取所有唯一的质量标签
