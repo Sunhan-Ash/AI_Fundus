@@ -29,7 +29,7 @@ parser.add_argument('--data_dir', default='./data/', type=str, help='path to dat
 parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs')
 parser.add_argument('--dataset', default='eye_degrade_last', type=str, help='dataset name')# eye_degrade
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
-parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
+parser.add_argument('--gpu', default='0,1', type=str, help='GPUs used for training')
 parser.add_argument('--resume', default='False', type=bool, help='continue training from last checkpoint')
 args = parser.parse_args()
 
