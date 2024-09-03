@@ -10,7 +10,7 @@ gt_dir = './dataset/GT/'
 
 # 创建新的目标目录
 source_dir = './dataset/diabetic-retinopathy-detection/quality_0'
-mask_dir = './dataset/diabetic-retinopathy-detection/mask'
+mask_dir = './dataset/diabetic-retinopathy-detection/mask/quality_0'
 os.makedirs(hazy_dir_base, exist_ok=True)
 os.makedirs(gt_dir, exist_ok=True)
 
@@ -36,7 +36,7 @@ for image_path in selected_images:
 for image_path in selected_images:
     # 读取图片和对应的掩码
     image = cv2.imread(image_path)
-    mask_path = os.path.join(mask_dir, os.path.basename(image_path).replace('.jpeg', '.jpeg'))
+    mask_path = os.path.join(mask_dir, os.path.basename(image_path))
     mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
     
     for scale in pooling_scales:
@@ -50,7 +50,7 @@ for image_path in selected_images:
         masked_image = cv2.bitwise_and(restored_image, restored_image, mask=mask)
         
         # 保存处理后的图像
-        output_dir = os.path.join(hazy_dir_base, f'pooling_{scale}x')
+        output_dir = os.path.join(hazy_dir_base, f'_{scale}x')
         os.makedirs(output_dir, exist_ok=True)
         save_path = os.path.join(output_dir, os.path.basename(image_path))
         cv2.imwrite(save_path, masked_image)
