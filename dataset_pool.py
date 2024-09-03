@@ -34,6 +34,7 @@ for image_path in selected_images:
 
 # 处理后的图像保存到 ./data/hazy 下
 for image_path in selected_images:
+    print(image_path)
     # 读取图片和对应的掩码
     image = cv2.imread(image_path)
     mask_path = os.path.join(mask_dir, os.path.basename(image_path))
@@ -50,7 +51,6 @@ for image_path in selected_images:
         masked_image = cv2.bitwise_and(restored_image, restored_image, mask=mask)
         
         # 保存处理后的图像
-        output_dir = os.path.join(hazy_dir_base, f'_{scale}x')
-        os.makedirs(output_dir, exist_ok=True)
-        save_path = os.path.join(output_dir, os.path.basename(image_path))
+        # output_dir = os.path.join(hazy_dir_base, f'_{scale}x')
+        save_path = os.path.join(hazy_dir_base, f"{os.path.splitext(os.path.basename(image_path))[0]}_{scale}x.jpeg")
         cv2.imwrite(save_path, masked_image)
