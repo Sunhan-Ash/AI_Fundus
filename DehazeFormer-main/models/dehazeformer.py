@@ -472,7 +472,7 @@ class DehazeFormer(nn.Module):
 		_, _, h, w = x.size()
 		mod_pad_h = (self.patch_size - h % self.patch_size) % self.patch_size
 		mod_pad_w = (self.patch_size - w % self.patch_size) % self.patch_size
-		print(mod_pad_h, mod_pad_w)
+		# print(mod_pad_h, mod_pad_w)
 		x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
 		return x
 
