@@ -4,6 +4,26 @@ import cv2
 import numpy as np
 import os
 from glob import glob
+
+def drop_pixels(image, downscale_factor):
+    # 读取原始图像
+    original_image = image
+    
+    # 获取原图的宽高
+    height, width, channels = original_image.shape
+    
+    # 创建新的图像的宽高
+    new_width = width // downscale_factor
+    new_height = height // downscale_factor
+    
+    # 通过跳过指定的像素来创建新图像
+    new_image = original_image[::downscale_factor, ::downscale_factor]
+    
+    # 将新图像resize回原来的尺寸
+    resized_image = cv2.resize(new_image, (width, height), interpolation=cv2.INTER_LINEAR)
+    
+    return resized_image
+
 # 定义新的目标目录
 hazy_dir_base = './dataset/hazy/'
 gt_dir = './dataset/GT/'
@@ -42,11 +62,11 @@ for image_path in selected_images:
     
     for scale in pooling_scales:
         # 对图像进行池化操作
-        pooled_image = cv2.resize(image, (image.shape[1] // scale, image.shape[0] // scale), interpolation=cv2.INTER_AREA)
+        # pooled_image = cv2.resize(image, (image.shape[1] // scale, image.shape[0] // scale), interpolation=cv2.INTER_AREA)
         
-        # 使用双线性插值恢复到原图大小
-        restored_image = cv2.resize(pooled_image, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_LINEAR)
-        
+        # # 使用双线性插值恢复到原图大小
+        # restored_image = cv2.resize(pooled_image, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_LINEAR)
+        restored_image = drop_pixels(image, scale)
         # 将恢复后的图像与掩码相乘
         masked_image = cv2.bitwise_and(restored_image, restored_image, mask=mask)
         
