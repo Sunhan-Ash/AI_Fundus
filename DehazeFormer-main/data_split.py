@@ -34,7 +34,7 @@ train_hazy_images, test_hazy_images = [], []
 random.shuffle(gt_images)
 
 # 计算分割索引
-split_index = int(len(gt_images) * 0.8)
+split_index = int(len(gt_images) * 0.9)
 
 # 分割GT图像路径
 train_gt_images = gt_images[:split_index]
@@ -44,14 +44,14 @@ test_gt_images = gt_images[split_index:]
 for gt_image in train_gt_images:
     base_name = os.path.splitext(os.path.basename(gt_image))[0]
     for scale in scales:
-        hazy_image = os.path.join(hazy_dir, f'{base_name}_pooling_{scale}.jpeg')
+        hazy_image = os.path.join(hazy_dir, f'{base_name}_{scale}.jpeg')
         if os.path.exists(hazy_image):
             train_hazy_images.append(hazy_image)
 
 for gt_image in test_gt_images:
     base_name = os.path.splitext(os.path.basename(gt_image))[0]
     for scale in scales:
-        hazy_image = os.path.join(hazy_dir, f'{base_name}_pooling_{scale}.jpeg')
+        hazy_image = os.path.join(hazy_dir, f'{base_name}_{scale}.jpeg')
         if os.path.exists(hazy_image):
             test_hazy_images.append(hazy_image)
 

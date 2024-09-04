@@ -27,10 +27,10 @@ parser.add_argument('--no_autocast', action='store_false', default=True, help='d
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--log_dir', default='./logs/', type=str, help='path to logs')
-parser.add_argument('--dataset', default='eye_degrade_last', type=str, help='dataset name')# eye_degrade
+parser.add_argument('--dataset', default='eye_pooled', type=str, help='dataset name')# eye_degrade
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 parser.add_argument('--gpu', default='0', type=str, help='GPUs used for training')
-parser.add_argument('--resume', default='False', type=bool, help='continue training from last checkpoint')
+parser.add_argument('--resume', default='True', type=bool, help='continue training from last checkpoint')
 args = parser.parse_args()
 
 os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -44,6 +44,7 @@ def train(train_loader, network, criterion, optimizer, scaler):
 	network.train()
 	for batch in tqdm(train_loader, desc="Training", unit="batch"):
 	# for batch in train_loader:
+
 		source_img = batch['source'].cuda()
 		target_img = batch['target'].cuda()
 
