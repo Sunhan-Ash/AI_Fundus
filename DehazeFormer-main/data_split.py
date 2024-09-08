@@ -4,10 +4,10 @@ import random
 from glob import glob
 
 # 定义源目录和目标目录
-gt_dir = './data/eye_pooled/GT/'
-hazy_dir = './data/eye_pooled/hazy/'
-train_dir = './data/eye_pooled/train/'
-test_dir = './data/eye_pooled/test/'
+gt_dir = './data/eye_pooled2/GT/'
+hazy_dir = './data/eye_pooled2/hazy/'
+train_dir = './data/eye_pooled2/train/'
+test_dir = './data/eye_pooled2/test/'
 
 # 创建目标目录
 train_gt_dir = os.path.join(train_dir, 'GT/')
@@ -24,7 +24,7 @@ os.makedirs(test_hazy_dir, exist_ok=True)
 gt_images = glob(os.path.join(gt_dir, '*.jpeg'))
 
 # 定义hazy图像的倍数后缀
-scales = ['2x', '4x', '8x', '16x']
+scales = ['2x', '4x', '6x']
 
 # 创建用于存储分割后图像路径的列表
 train_gt_images, test_gt_images = [], []
