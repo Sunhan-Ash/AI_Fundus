@@ -1,0 +1,51 @@
+----------------- Options ---------------
+             aspect_ratio: 1.0                           
+               batch_size: 1                             
+          checkpoints_dir: ./checkpoints                 
+                crop_size: 256                           
+                 dataroot: /media/xusunhan/ZhiTai/AI_fundus/PCENet-Image-Enhancement-master/PCENet-Image-Enhancement-master/datasets/fiq_dataset	[default: None]
+             dataset_mode: fiq_basic                     
+                direction: AtoB                          
+          display_winsize: 256                           
+                    epoch: latest                        
+                     eval: False                         
+                eval_test: False                         
+          eval_when_train: False                         
+                  gpu_ids: 0                             
+                init_gain: 0.02                          
+                init_type: normal                        
+                 input_nc: 3                             
+                  isTrain: False                         	[default: None]
+             is_fid_score: False                         
+   is_public_test_dataset: False                         
+                load_iter: 0                             	[default: 0]
+                load_size: 256                           
+         max_dataset_size: inf                           
+                    model: pcenet                        	[default: test]
+               n_layers_D: 3                             
+                     name: pcenet                        	[default: experiment_name]
+                      ndf: 64                            
+                    ndfDV: 256                           
+                     netD: basic                         
+                    netDV: Conv                          
+                     netG: pce_backbone                  
+                      ngf: 64                            
+               no_dropout: True                          
+                  no_flip: False                         
+             no_reference: True                          	[default: False]
+                     norm: instance                      
+     not_use_prepare_mask: True                          	[default: False]
+                 num_test: 2000                          
+              num_threads: 4                             
+                output_nc: 3                             
+                    phase: test                          
+               preprocess: resize_and_crop               
+              results_dir: ./results/                    
+           serial_batches: False                         
+        source_size_count: 4                             
+                   suffix:                               
+            target_gt_dir: target_gt                     
+           test_crop_size: 256                           
+           test_ssim_psnr: False                         
+                  verbose: False                         
+----------------- End -------------------

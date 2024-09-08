@@ -76,6 +76,7 @@ if you use the pretrain weight to train a new mode, you can use the followed com
 
 ```
 python train.py --dataroot ./datasets/fiq_dataset --name train_pcenet --model pcenet --input_nc 3 --direction AtoB --batch_size 4 --DR_batch_size 4 --lr_policy linear --n_epochs 150 --n_epochs_decay 50 --dataset_mode fiq_batch --gpu_ids 0 --eval_test --eval_when_train --test_ssim_psnr --pretrain_model pcenet_pretrain --source_clear_num_images 2000
+
 ```
 
 --source_clear_num_images is the number of clear images in dataset
@@ -92,6 +93,7 @@ if you want to use the pretrain model for test, you can rename the name of the p
 place it to ./checkpoints/pcenet/latest_net_G.pth
 ```
 python test.py --dataroot ./datasets/fiq_dataset --name pcenet --model pcenet --netG pce_backbone --input_nc 3 --direction AtoB --dataset_mode fiq_basic --gpu_ids 0 --not_use_prepare_mask --no_reference
+python test.py --dataroot ./datasets/fiq_dataset2 --name train_pcenet --model pcenet --netG pce_backbone --input_nc 3 --direction AtoB --dataset_mode fiq_basic --gpu_ids 0 --not_use_prepare_mask --no_reference
 ```
 
 # Reference

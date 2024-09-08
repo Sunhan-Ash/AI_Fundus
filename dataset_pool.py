@@ -20,7 +20,7 @@ def drop_pixels(image, downscale_factor):
     new_image = original_image[::downscale_factor, ::downscale_factor]
     
     # 将新图像resize回原来的尺寸
-    resized_image = cv2.resize(new_image, (width, height), interpolation=cv2.INTER_LINEAR)
+    resized_image = cv2.resize(new_image, (width, height), interpolation=cv2.INTER_NEAREST)
     
     return resized_image
 
