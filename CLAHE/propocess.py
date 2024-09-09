@@ -2,8 +2,8 @@ import cv2
 import os
 
 # 设置输入和输出文件夹路径
-input_folder = 'path/to/your/input/folder'
-output_folder = 'path/to/your/output/folder'
+input_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_real/test/hazy'
+output_folder = './output'
 
 # 确保输出文件夹存在
 os.makedirs(output_folder, exist_ok=True)
