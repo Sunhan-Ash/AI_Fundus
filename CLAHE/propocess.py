@@ -11,16 +11,27 @@ os.makedirs(output_folder, exist_ok=True)
 # 创建CLAHE对象
 clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
 
-# 处理文件夹中的所有图像
 for filename in os.listdir(input_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-        # 读取图像
-        img = cv2.imread(os.path.join(input_folder, filename), cv2.IMREAD_GRAYSCALE)
+        # 读取彩色图像
+        img = cv2.imread(os.path.join(input_folder, filename))
 
-        # 应用CLAHE
-        clahe_img = clahe.apply(img)
+        # 将图像转换为LAB颜色空间
+        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
 
-        # 保存结果
-        cv2.imwrite(os.path.join(output_folder, filename), clahe_img)
+        # 拆分LAB图像为L, A, B通道
+        l, a, b = cv2.split(lab)
+
+        # 对L通道应用CLAHE
+        l_clahe = clahe.apply(l)
+
+        # 将处理后的L通道和原始的A, B通道合并
+        lab_clahe = cv2.merge((l_clahe, a, b))
+
+        # 将LAB图像转换回RGB
+        img_clahe = cv2.cvtColor(lab_clahe, cv2.COLOR_LAB2BGR)
+
+        # 保存处理后的图像
+        cv2.imwrite(os.path.join(output_folder, filename), img_clahe)
 
 print("CLAHE处理完成")
