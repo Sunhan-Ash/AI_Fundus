@@ -15,9 +15,12 @@ for filename in os.listdir(input_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
         # 读取彩色图像
         img = cv2.imread(os.path.join(input_folder, filename))
+        
+
+        denoised_img = cv2.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
 
         # 将图像转换为LAB颜色空间
-        lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+        lab = cv2.cvtColor(denoised_img, cv2.COLOR_BGR2LAB)
 
         # 拆分LAB图像为L, A, B通道
         l, a, b = cv2.split(lab)
