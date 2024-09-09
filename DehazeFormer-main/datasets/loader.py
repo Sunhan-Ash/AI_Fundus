@@ -85,7 +85,8 @@ class PairLoader(Dataset):
 		# source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
 		# target_img = read_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
 		# read_resize_img
-		source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
+		# source_img = read_resize_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
+		source_img = read_img(os.path.join(self.root_dir, 'hazy', img_name)) * 2 - 1
 		# mask_img = read_mask(os.path.join(self.root_dir, 'mask', target_image_name))
 		# if len(mask_img.shape) == 2:
 		# 	mask_img = np.expand_dims(mask_img, axis=-1)  # 扩展维度，使其形状为 (H, W, 1)
@@ -93,7 +94,8 @@ class PairLoader(Dataset):
 		# 	target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1
 		# if self.mode == 'valid':
 		# 	target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
-		target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1		
+		# target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1		
+		target_img = read_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1	
 		# source_img = source_img * mask_img
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)
