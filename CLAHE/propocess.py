@@ -17,8 +17,8 @@ for filename in os.listdir(input_folder):
         img = cv2.imread(os.path.join(input_folder, filename))
         
 
-        denoised_img = cv2.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
-
+        # denoised_img = cv2.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
+        denoised_img = cv2.bilateralFilter(img, d=9, sigmaColor=75, sigmaSpace=75)
         # 将图像转换为LAB颜色空间
         lab = cv2.cvtColor(denoised_img, cv2.COLOR_BGR2LAB)
 
