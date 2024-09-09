@@ -499,6 +499,7 @@ class DehazeFormer(nn.Module):
 		return x
 
 	def forward(self, x):
+		x = F.interpolate(x, scale_factor=0.5, mode='bilinear', align_corners=False)
 		H, W = x.shape[2:]
 		x = self.check_image_size(x)
 
