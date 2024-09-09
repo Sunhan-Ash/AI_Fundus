@@ -9,7 +9,7 @@ output_folder = './output'
 os.makedirs(output_folder, exist_ok=True)
 
 # 创建CLAHE对象
-clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(8, 8))
 
 for filename in os.listdir(input_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
