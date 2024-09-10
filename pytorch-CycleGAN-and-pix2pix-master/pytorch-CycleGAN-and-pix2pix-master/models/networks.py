@@ -495,7 +495,7 @@ class ResnetGenerator(nn.Module):
         K, B = torch.split(out, (1, 3), dim=1)
         out = K * out - B + out
         out = out[:, :, :H, :W]
-        out = self.alpha * out + (1 - self.alpha) * input
+        # out = self.alpha * out + (1 - self.alpha) * input
         return out
 
 
