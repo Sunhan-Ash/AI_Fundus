@@ -405,6 +405,21 @@ class OurResnetBlock(nn.Module):
     def forward(self, x):
         x = x + self.conv_block(x)  # add skip connections
         return x
+class PatchEmbed(nn.Module):
+	def __init__(self, patch_size=4, in_chans=3, embed_dim=96, kernel_size=None):
+		super().__init__()
+		self.in_chans = in_chans
+		self.embed_dim = embed_dim
+
+		if kernel_size is None:
+			kernel_size = patch_size
+
+		self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=kernel_size, stride=patch_size,
+							  padding=(kernel_size-patch_size+1)//2, padding_mode='reflect')
+
+	def forward(self, x):
+		x = self.proj(x)
+		return x
 class ResnetGenerator(nn.Module):
     """Resnet-based generator that consists of Resnet blocks between a few downsampling/upsampling operations.
 
@@ -431,7 +446,8 @@ class ResnetGenerator(nn.Module):
             use_bias = norm_layer.func == nn.InstanceNorm2d
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
-
+        self.patch_embed = PatchEmbed(
+			patch_size=1, in_chans=3, embed_dim=input_nc, kernel_size=3)
         model = [nn.ReflectionPad2d(3),
                  nn.Conv2d(input_nc, ngf, kernel_size=7, padding=0, bias=use_bias),
                  norm_layer(ngf),
@@ -474,7 +490,8 @@ class ResnetGenerator(nn.Module):
     def forward(self, input):
         """Standard forward"""
         H, W = input.shape[2:]
-        out = self.model(input)
+        x = self.patch_embed(input)
+        out = self.model(x)
         K, B = torch.split(out, (1, 3), dim=1)
         out = K * out - B + out
         out = out[:, :, :H, :W]
