@@ -14,14 +14,14 @@ import pyiqa
 
 ssim = pyiqa.create_metric('ssim',device='cuda:0')
 musiq = pyiqa.create_metric("musiq", device="cuda:0")
-# piqe = pyiqa.create_metric("piqe", device="cuda:0")
+piqe = pyiqa.create_metric("piqe", device="cuda:0")
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', default='dehazeformer-s', type=str, help='model name')
 parser.add_argument('--num_workers', default=16, type=int, help='number of workers')
 parser.add_argument('--data_dir', default='./data/', type=str, help='path to dataset')
 parser.add_argument('--save_dir', default='./saved_models/', type=str, help='path to models saving')
 parser.add_argument('--result_dir', default='./results/', type=str, help='path to results saving')
-parser.add_argument('--dataset', default='eye_pooled2', type=str, help='dataset name')
+parser.add_argument('--dataset', default='eye_real', type=str, help='dataset name')
 parser.add_argument('--exp', default='indoor', type=str, help='experiment setting')
 args = parser.parse_args()
 
@@ -71,8 +71,8 @@ def test(test_loader, network, result_dir):
 			down_ratio = max(1, round(min(H, W) / 256))		# Zhou Wang
 			ssim_val = ssim(output, 
 							target).item()	
-			# piqe_val = piqe(output).item()
-			piqe_val = 0
+			piqe_val = piqe(output).item()
+			# piqe_val = 0
 			# musiq_val = 0
 			musiq_val = musiq(output).item()			
 
