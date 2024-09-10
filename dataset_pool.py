@@ -41,7 +41,7 @@ image_paths = glob(os.path.join(source_dir, '*.jpeg'))
 selected_images = random.sample(image_paths, min(4000, len(image_paths)))
 
 # 定义池化倍数列表
-pooling_scales = [6,12,24]
+pooling_scales = [8,16,24]
 
 # 将未处理的图像复制到 ./data/GT 下
 for image_path in selected_images:
