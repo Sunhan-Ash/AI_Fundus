@@ -95,7 +95,7 @@ class PairLoader(Dataset):
 		# if self.mode == 'valid':
 		# 	target_img = read_resize_img(os.path.join(self.root_dir, 'GT', img_name)) * 2 - 1
 		# target_img = read_resize_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1		
-		target_img = read_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1	
+		target_img = read_img(os.path.join(self.root_dir, 'GT', target_image_name)) * 2 - 1
 		# source_img = source_img * mask_img
 		if self.mode == 'train':
 			[source_img, target_img] = augment([source_img, target_img], self.size, self.edge_decay, self.only_h_flip)
