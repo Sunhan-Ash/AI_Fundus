@@ -3,7 +3,9 @@ import itertools
 from util.image_pool import ImagePool
 from .base_model import BaseModel
 from . import networks
-from models.contrast import HighFrequencyLoss
+import torch.nn.functional as F
+from models.contrast import HighFrequencyLoss,HF_loss
+
 
 
 
@@ -92,8 +94,9 @@ class CycleGANModel(BaseModel):
             # define loss functions
             self.criterionGAN = networks.GANLoss(opt.gan_mode).to(self.device)  # define GAN loss.
             self.criterionCycle = torch.nn.L1Loss()
-            # self.criterionIdt = torch.nn.L1Loss()
-            self.criterionIdt = HighFrequencyLoss()
+            self.criterionIdt = torch.nn.L1Loss()
+            # self.criterionIdt = HighFrequencyLoss()
+            self.high_frequency_loss = HF_loss(kernel_size=5,sigma=1.5)
 
             # initialize optimizers; schedulers will be automatically created by function <BaseModel.setup>.
             self.optimizer_G = torch.optim.Adam(itertools.chain(self.netG_A.parameters(), self.netG_B.parameters()), lr=opt.lr, betas=(opt.beta1, 0.999))
@@ -157,6 +160,8 @@ class CycleGANModel(BaseModel):
         fake_A = self.fake_A_pool.query(self.fake_A)
         self.loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)
 
+    
+
     def backward_G(self):
         """Calculate the loss for generators G_A and G_B"""
         lambda_idt = self.opt.lambda_identity
@@ -173,7 +178,9 @@ class CycleGANModel(BaseModel):
         else:
             self.loss_idt_A = 0
             self.loss_idt_B = 0
-
+        #绿色通道上的高频细节损失
+        HF_loss_A = self.high_frequency_loss(self.real_A, self.fake_B) * lambda_A
+        HF_loss_B = self.high_frequency_loss(self.real_B, self.fake_A) * lambda_B
         # GAN loss D_A(G_A(A))
         self.loss_G_A = self.criterionGAN(self.netD_A(self.fake_B), True)
         # GAN loss D_B(G_B(B))
@@ -183,7 +190,7 @@ class CycleGANModel(BaseModel):
         # Backward cycle loss || G_A(G_B(B)) - B||
         self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B) * lambda_B
         # combined loss and calculate gradients
-        self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_idt_A + self.loss_idt_B
+        self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_idt_A + self.loss_idt_B + HF_loss_A + HF_loss_B
         self.loss_G.backward()
 
     def optimize_parameters(self):
