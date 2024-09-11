@@ -32,20 +32,20 @@ def calculate_metrics_for_dataset(img_folder, target_folder):
 
         # 调用现有的 PSNR 和 SSIM 计算函数
         psnr_value = calculate_psnr(img_path, target_path)
-        ssim_value = calculate_ssim(img_path, target_path)
+        # ssim_value = calculate_ssim(img_path, target_path)
 
         # 存储结果
         psnr_results+=psnr_value.item()
-        ssim_results+=ssim_value.item()
+        # ssim_results+=ssim_value.item()
 
-    return psnr_results/count, ssim_results/count
+    return psnr_results/count
 
 # 示例调用
 img_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled3/test/hazy'
 target_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled3/test/GT'
 
-psnr_results, ssim_results = calculate_metrics_for_dataset(img_folder, target_folder)
-print(f"PSNR = {psnr_results}, SSIM = {ssim_results}")
+psnr_results = calculate_metrics_for_dataset(img_folder, target_folder)
+print(f"PSNR = {psnr_results}")
 # 打印结果
 # for i, (psnr, ssim) in enumerate(zip(psnr_results, ssim_results)):
 #     print(f"Image {i+1}: PSNR = {psnr}, SSIM = {ssim}")

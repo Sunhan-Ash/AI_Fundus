@@ -24,7 +24,7 @@ os.makedirs(test_hazy_dir, exist_ok=True)
 gt_images = glob(os.path.join(gt_dir, '*.jpeg'))
 
 # 定义hazy图像的倍数后缀
-scales = ['8x', '16x', '6x']
+scales = ['24x', '16x', '20x']
 
 # 创建用于存储分割后图像路径的列表
 train_gt_images, test_gt_images = [], []
