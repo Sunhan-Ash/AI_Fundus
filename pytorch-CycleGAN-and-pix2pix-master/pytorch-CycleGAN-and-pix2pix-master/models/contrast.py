@@ -33,7 +33,8 @@ def extract_high_frequency(image, kernel_size=5, sigma=1.0):
 
 class HF_loss(nn.Module):
     def __init__(self, kernel_size=5, sigma=1.0):
-        self.loss_function = torch.nn.L1Loss()
+        super(HF_loss, self).__init__()
+        self.loss_function = nn.L1Loss().cuda()
         self.kernel_size = kernel_size
         self.sigma = sigma
 
