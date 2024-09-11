@@ -41,8 +41,8 @@ def calculate_metrics_for_dataset(img_folder, target_folder):
     return psnr_results/count, ssim_results/count
 
 # 示例调用
-img_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled2/test/hazy'
-target_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled2/test/GT'
+img_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled3/test/hazy'
+target_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_pooled3/test/GT'
 
 psnr_results, ssim_results = calculate_metrics_for_dataset(img_folder, target_folder)
 print(f"PSNR = {psnr_results}, SSIM = {ssim_results}")
