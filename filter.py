@@ -2,9 +2,9 @@ import os
 import shutil
 
 # 源文件夹路径
-source_dir = "你的源文件夹路径"
+source_dir = "./pytorch-CycleGAN-and-pix2pix-master/pytorch-CycleGAN-and-pix2pix-master/results/EyeQ_cyclegan_new/test_latest/images"
 # 目标文件夹路径
-target_dir = "你的目标文件夹路径"
+target_dir = "./results/9.18"
 
 # 图片格式列表，可以根据需要添加其他格式
 image_formats = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff']
@@ -16,6 +16,7 @@ if not os.path.exists(target_dir):
 # 遍历源文件夹中的所有文件
 for filename in os.listdir(source_dir):
     # 检查文件是否以fake_B或real_A结尾，并且扩展名在支持的格式中
+    
     if (filename.endswith("fake_B") or filename.endswith("real_A")) and any(filename.endswith(ext) for ext in image_formats):
         # 构造完整的源文件路径和目标文件路径
         source_file = os.path.join(source_dir, filename)
