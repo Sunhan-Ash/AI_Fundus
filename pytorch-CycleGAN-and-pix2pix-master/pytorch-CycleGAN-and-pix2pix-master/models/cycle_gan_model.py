@@ -179,8 +179,8 @@ class CycleGANModel(BaseModel):
             self.loss_idt_A = 0
             self.loss_idt_B = 0
         #绿色通道上的高频细节损失
-        HF_loss_A = self.high_frequency_loss(self.real_A, self.fake_B) * lambda_A
-        HF_loss_B = self.high_frequency_loss(self.real_B, self.fake_A) * lambda_B
+        HF_loss_A = self.high_frequency_loss(self.real_A, self.fake_B) * lambda_A/2
+        HF_loss_B = self.high_frequency_loss(self.real_B, self.fake_A) * lambda_B/2
         # GAN loss D_A(G_A(A))
         self.loss_G_A = self.criterionGAN(self.netD_A(self.fake_B), True)
         # GAN loss D_B(G_B(B))
