@@ -96,7 +96,7 @@ class CycleGANModel(BaseModel):
             self.criterionCycle = torch.nn.L1Loss()
             self.criterionIdt = torch.nn.L1Loss()
             # self.criterionIdt = HighFrequencyLoss()
-            self.high_frequency_loss = HF_loss(kernel_size=5,sigma=1.5)
+            self.high_frequency_loss = HighFrequencyLoss()
 
             # initialize optimizers; schedulers will be automatically created by function <BaseModel.setup>.
             self.optimizer_G = torch.optim.Adam(itertools.chain(self.netG_A.parameters(), self.netG_B.parameters()), lr=opt.lr, betas=(opt.beta1, 0.999))

@@ -475,8 +475,9 @@ class ResnetGenerator(nn.Module):
         """Standard forward"""
         H, W = input.shape[2:]
         out = self.model(input)
-        out = self.alpha * out + (1 - self.alpha) * input
+        
         out = out[:, :, :H, :W]
+        out = self.alpha * out + (1 - self.alpha) * input
         return out
 
 

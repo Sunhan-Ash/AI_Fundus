@@ -7,27 +7,57 @@ from torch.autograd import Variable
 import numpy as np
 from torchvision import models
 
+def fourier_low_pass(image, cutoff=30):
+    """ 使用傅里叶变换实现低通滤波器 """
+    # 只对绿色通道进行傅里叶变换
+    green_channel = image[:, 1:2, :, :]
+    
+    # 进行 2D 傅里叶变换
+    fft = torch.fft.fft2(green_channel)
+    fft_shift = torch.fft.fftshift(fft)
+
+    # 创建低通滤波器掩膜
+    rows, cols = green_channel.shape[2:]
+    crow, ccol = rows // 2 , cols // 2
+
+    mask = torch.zeros_like(green_channel, dtype=torch.complex64)
+    mask[:, :, crow-cutoff:crow+cutoff, ccol-cutoff:ccol+cutoff] = 1
+
+    # 应用掩膜
+    fft_shift = fft_shift * mask
+
+    # 逆傅里叶变换回时域
+    fft_ishift = torch.fft.ifftshift(fft_shift)
+    low_freq = torch.fft.ifft2(fft_ishift).real
+
+    return low_freq
+
+
 def gaussian_blur(image, kernel_size=5, sigma=1.0):
     """ 使用高斯模糊提取低频信息 """
     # 创建高斯核
     def get_gaussian_kernel(kernel_size, sigma):
         ax = torch.arange(-(kernel_size - 1) // 2 + 1, (kernel_size - 1) // 2 + 1, dtype=torch.float32)
-        xx, yy = torch.meshgrid([ax, ax])
+        xx, yy = torch.meshgrid([ax, ax], indexing='ij')
         kernel = torch.exp(-(xx**2 + yy**2) / (2 * sigma**2))
         kernel = kernel / kernel.sum()
         return kernel
-    
-    # 高斯滤波核应用在绿色通道
+
+    # 获取高斯核并调整形状为 [1, 1, kernel_size, kernel_size]
     kernel = get_gaussian_kernel(kernel_size, sigma)
-    kernel = kernel.view(1, 1, kernel_size, kernel_size).to(image.device)  # 适配卷积
     
-    # 对每个图像的绿色通道进行卷积
-    low_freq = F.conv2d(image, kernel, padding=kernel_size//2, groups=image.shape[1])  # 保持尺寸一致
+    # 如果图像是多通道的，处理绿色通道
+    # green_channel = image[:, 1:2, :, :]  # 选择绿色通道，假设 image 是 [B, C, H, W] 形式
+    
+    # 调整高斯核的形状
+    kernel = kernel.view(1, 1, kernel_size, kernel_size).to(image.device)  # 适配卷积
+    low_freq = F.conv2d(image, kernel, padding=kernel_size // 2, groups=1)  # 单通道卷积
     return low_freq
 
 def extract_high_frequency(image, kernel_size=5, sigma=1.0):
     """ 提取高频信息：原图减去低频信息 """
     low_freq = gaussian_blur(image, kernel_size, sigma)
+    # low_freq = fourier_low_pass(image=image)
     high_freq = image - low_freq  # 高频信息 = 原图 - 低频信息
     return high_freq
 
