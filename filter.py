@@ -15,9 +15,10 @@ if not os.path.exists(target_dir):
 
 # 遍历源文件夹中的所有文件
 for filename in os.listdir(source_dir):
+    # 使用os.path.splitext将文件名和扩展名分开
+    name, ext = os.path.splitext(filename)
     # 检查文件是否以fake_B或real_A结尾，并且扩展名在支持的格式中
-    
-    if (filename.endswith("fake_B") or filename.endswith("real_A")) and any(filename.endswith(ext) for ext in image_formats):
+    if (name.endswith("fake_B") or name.endswith("real_A")) and any(filename.endswith(ext) for ext in image_formats):
         # 构造完整的源文件路径和目标文件路径
         source_file = os.path.join(source_dir, filename)
         target_file = os.path.join(target_dir, filename)
