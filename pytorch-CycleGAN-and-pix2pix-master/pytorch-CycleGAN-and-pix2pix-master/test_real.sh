@@ -1,1 +1,1 @@
-python test.py --dataroot ./datasets/large_real --name EyeQ_cyclegan_new --model cycle_gan
+python test.py --dataroot ./datasets/Mix_Small --name EyeQ_cyclegan_new --model cycle_gan
