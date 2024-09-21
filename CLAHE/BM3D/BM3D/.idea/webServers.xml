@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="893c17b8-7a16-4905-817b-a08d18b8a45d" name="8T">
+        <fileTransfer rootFolder="/mnt/8T/wangjuan/project" accessType="SFTP" host="172.18.32.115" port="22" sshConfigId="e849d333-0130-4ef4-bba7-0ee2ef1ad1ef" sshConfig="wangjuan@172.18.32.115:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
