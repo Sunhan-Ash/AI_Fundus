@@ -4,7 +4,7 @@ import shutil
 # 源文件夹路径
 source_dir = "./pytorch-CycleGAN-and-pix2pix-master/pytorch-CycleGAN-and-pix2pix-master/results/EyeQ_cyclegan_new/test_latest/images"
 # 目标文件夹路径
-target_dir = "./results/9.18"
+target_dir = "./results/9.21"
 
 # 图片格式列表，可以根据需要添加其他格式
 image_formats = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff']
