@@ -48,8 +48,8 @@ class ListAverageMeter(object):
 def read_img(filename):
 
 	img = cv2.imread(filename)
-	height, width = img.shape[:2]
-	img = cv2.resize(img, (width // 2, height // 2), interpolation=cv2.INTER_LINEAR)
+	# height, width = img.shape[:2]
+	# img = cv2.resize(img, (width // 2, height // 2), interpolation=cv2.INTER_LINEAR)
 	return img[:, :, ::-1].astype('float32') / 255.0
 
 def read_mask(filename):
@@ -58,6 +58,7 @@ def read_mask(filename):
 	return img.astype('float32') / 255.0 
 
 def read_resize_img(filename):
+
 	img = cv2.imread(filename)
 	img = cv2.resize(img, (1440, 1440))
 	return img[:, :, ::-1].astype('float32') / 255.0
