@@ -1,12 +1,12 @@
 import cv2
 import os
 from skimage.restoration import estimate_sigma
-from BM3D.BM3D.bm3d import bm3d_rgb, BM3DProfile
+# from BM3D.BM3D.bm3d import bm3d_rgb, BM3DProfile
 import numpy as np
 # from bm3d import bm3d_rgb, BM3DProfile
 
 # 设置输入和输出文件夹路径
-input_folder = '/media/xusunhan/ZhiTai/AI_fundus/DehazeFormer-main/data/eye_real/test/hazy'
+input_folder = '/media/xusunhan/ZhiTai/AI_fundus/pytorch-CycleGAN-and-pix2pix-master/pytorch-CycleGAN-and-pix2pix-master/datasets/Mix_Small/testA'
 output_folder = './output'
 
 # 确保输出文件夹存在
@@ -15,10 +15,10 @@ os.makedirs(output_folder, exist_ok=True)
 # 创建CLAHE对象
 clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(8, 8))
 
-def BM3D_denoise(img,psd):
-        # Call BM3D With the default settings.
-        y_est = bm3d_rgb(img, psd) #* 255
-        y_est = np.clip(y_est, -1, 1) * 255
+# def BM3D_denoise(img,psd):
+#         # Call BM3D With the default settings.
+#         y_est = bm3d_rgb(img, psd) #* 255
+#         y_est = np.clip(y_est, -1, 1) * 255
 
 
 for filename in os.listdir(input_folder):
@@ -28,11 +28,12 @@ for filename in os.listdir(input_folder):
         
 
         # denoised_img = cv2.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
-        # denoised_img = cv2.bilateralFilter(img, d=9, sigmaColor=75, sigmaSpace=75)
-        sigma_est = estimate_sigma(img, multichannel=True, average_sigmas=True)
-        denoised_img = BM3D_denoise(img=img,psd=sigma_est)
+        denoised_img = cv2.bilateralFilter(img, d=9, sigmaColor=75, sigmaSpace=75)
+        # sigma_est = estimate_sigma(img, average_sigmas=True)
+        # denoised_img = BM3D_denoise(img=img,psd=sigma_est)
         # 将图像转换为LAB颜色空间
         lab = cv2.cvtColor(denoised_img, cv2.COLOR_BGR2LAB)
+        # lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
 
         # 拆分LAB图像为L, A, B通道
         l, a, b = cv2.split(lab)
