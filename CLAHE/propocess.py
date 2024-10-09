@@ -5,6 +5,22 @@ from skimage.restoration import estimate_sigma
 import numpy as np
 # from bm3d import bm3d_rgb, BM3DProfile
 
+def calculate_brightness(image_path):
+    # 读取图像
+    image = cv2.imread(image_path)
+    
+    # 转换为HSV颜色空间
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
+    # 提取亮度通道（V通道）
+    v_channel = hsv[:, :, 2]
+    
+    # 计算亮度平均值
+    brightness = np.mean(v_channel)
+    return brightness
+
+
+
 # 设置输入和输出文件夹路径
 input_folder = '/media/xusunhan/ZhiTai/AI_fundus/pytorch-CycleGAN-and-pix2pix-master/pytorch-CycleGAN-and-pix2pix-master/datasets/Mix_Small/testA'
 output_folder = './output'
