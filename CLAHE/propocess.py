@@ -1,6 +1,7 @@
 import cv2
 import os
-from skimage.restoration import estimate_sigma
+from PIL import Image, ImageEnhance
+# from skimage.restoration import estimate_sigma
 # from BM3D.BM3D.bm3d import bm3d_rgb, BM3DProfile
 import numpy as np
 # from bm3d import bm3d_rgb, BM3DProfile
@@ -19,12 +20,22 @@ def calculate_brightness(image_path):
     brightness = np.mean(v_channel)
     return brightness
 
+def adjust_brightness(image, brightness_factor):
+    pil_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    enhancer = ImageEnhance.Brightness(pil_image)
+    brightened_image = enhancer.enhance(brightness_factor)
+    return cv2.cvtColor(np.array(brightened_image), cv2.COLOR_RGB2BGR)
 
+def calculate_brightness_factor(current_brightness, target_brightness):
+    # 防止零除的异常
+    if current_brightness == 0:
+        return 1.0
+    return target_brightness / current_brightness
 
 # 设置输入和输出文件夹路径
 input_folder = '/media/xusunhan/ZhiTai/AI_fundus/pytorch-CycleGAN-and-pix2pix-master/pytorch-CycleGAN-and-pix2pix-master/datasets/Mix_Small/testA'
 output_folder = './output'
-
+target_brightness = 100
 # 确保输出文件夹存在
 os.makedirs(output_folder, exist_ok=True)
 
@@ -41,10 +52,14 @@ for filename in os.listdir(input_folder):
     if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
         # 读取彩色图像
         img = cv2.imread(os.path.join(input_folder, filename))
-        
+        current_brightness = calculate_brightness(img)
 
+
+        brightness_factor = calculate_brightness_factor(current_brightness, target_brightness)
+
+        adjusted_image = adjust_brightness(img, brightness_factor)
         # denoised_img = cv2.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
-        denoised_img = cv2.bilateralFilter(img, d=9, sigmaColor=75, sigmaSpace=75)
+        denoised_img = cv2.bilateralFilter(adjusted_image, d=9, sigmaColor=75, sigmaSpace=75)
         # sigma_est = estimate_sigma(img, average_sigmas=True)
         # denoised_img = BM3D_denoise(img=img,psd=sigma_est)
         # 将图像转换为LAB颜色空间
