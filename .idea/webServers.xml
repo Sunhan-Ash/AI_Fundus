@@ -9,6 +9,20 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="dafdb871-0752-44fd-9337-23b4f6f5635d" name="MyComputer">
+        <fileTransfer rootFolder="/media/xusunhan/ZhiTai/AI_fundus" accessType="SFTP" host="10.11.47.90" port="22" sshConfigId="7c795744-09e3-4861-a5b2-34bded85722a" sshConfig="xusunhan@10.11.47.90:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="44a9f39a-193b-422b-a61c-2adc83aea401" name="3090">
+        <fileTransfer rootFolder="/home/ls/ls" accessType="SFTP" host="10.11.47.199" port="22" sshConfigId="db7185a9-5405-4870-85b7-d7c273ca7c45" sshConfig="ls@10.11.47.199:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

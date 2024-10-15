@@ -2,7 +2,21 @@
 <project version="4">
   <component name="PublishConfigData" serverName="CAS-xhAI" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
+      <paths name="3090">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="CAS-xhAI">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="MyComputer">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
