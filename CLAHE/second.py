@@ -16,11 +16,13 @@ def rgb_to_ciecam02_j(image_rgb):
                                   colour.models.RGB_COLOURSPACES['sRGB'].whitepoint, 
                                   colour.models.RGB_COLOURSPACES['sRGB'].matrix_RGB_to_XYZ)
 
-    # Use a simple illuminant for CIECAM02 conversion, e.g., D65 illuminant
-    illuminant = colour.models.RGB_COLOURSPACES['sRGB'].whitepoint
-    
-    # Convert XYZ to CIECAM02
-    image_ciecam02 = colour.XYZ_to_CIECAM02(image_xyz, XYZ_w=illuminant)
+    # Define viewing conditions for CIECAM02 conversion
+    illuminant = colour.models.RGB_COLOURSPACES['sRGB'].whitepoint  # D65 illuminant (sRGB whitepoint)
+    L_A = 64  # Typical luminance of the adapting field (in cd/m²)
+    Y_b = 20  # Background relative luminance (in cd/m²)
+
+    # Convert XYZ to CIECAM02 using the specified viewing conditions
+    image_ciecam02 = colour.XYZ_to_CIECAM02(image_xyz, XYZ_w=illuminant, L_A=L_A, Y_b=Y_b)
 
     # Extract the J (lightness) component
     j_component = image_ciecam02[..., 0]  # J component represents the lightness
