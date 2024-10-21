@@ -8,23 +8,21 @@ import os
 def rgb_to_ciecam02_j(image_rgb):
     """
     Convert an RGB image to the CIECAM02 color space and extract the J component (lightness).
-    This step normalizes the RGB values and converts them to the CIECAM02 color space to extract
-    the grayscale information with high brightness.
     """
-    # Convert RGB image to XYZ color space using the 'sRGB' reference
-    image_rgb_normalized = image_rgb / 255.0  # Normalize the RGB values to [0, 1]
-    
-    # Convert the normalized RGB to XYZ using the 'sRGB' color space parameters
+    # Convert RGB to XYZ
+    image_rgb_normalized = image_rgb / 255.0  # Normalize to [0, 1]
     image_xyz = colour.RGB_to_XYZ(image_rgb_normalized, 
                                   colour.models.RGB_COLOURSPACES['sRGB'].whitepoint,
-                                  colour.models.RGB_COLOURSPACES['sRGB'].whitepoint,
+                                  colour.models.RGB_COLOURSPACES['sRGB'].whitepoint, 
                                   colour.models.RGB_COLOURSPACES['sRGB'].matrix_RGB_to_XYZ)
+
+    # Use a simple illuminant for CIECAM02 conversion, e.g., D65 illuminant
+    illuminant = colour.models.RGB_COLOURSPACES['sRGB'].whitepoint
     
-    # Convert XYZ to CIECAM02 color space to extract J Component
-    image_ciecam02 = colour.XYZ_to_CIECAM02(image_xyz, 
-                                            colour.CIE_standard_observer_2_degree_cmfs('CIE 1931 2 Degree Standard Observer').shape)
-    
-    # Extract the J (lightness) component from the CIECAM02 output
+    # Convert XYZ to CIECAM02
+    image_ciecam02 = colour.XYZ_to_CIECAM02(image_xyz, XYZ_w=illuminant)
+
+    # Extract the J (lightness) component
     j_component = image_ciecam02[..., 0]  # J component represents the lightness
     return j_component
 
