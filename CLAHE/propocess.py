@@ -70,7 +70,8 @@ for filename in os.listdir(input_folder):
         l, a, b = cv2.split(lab)
 
         # 对L通道应用CLAHE
-        l_clahe = clahe.apply(l)
+        laplacian = cv2.Laplacian(l, cv2.CV_64F)
+        l_clahe = clahe.apply(laplacian)
 
         # 将处理后的L通道和原始的A, B通道合并
         lab_clahe = cv2.merge((l_clahe, a, b))
