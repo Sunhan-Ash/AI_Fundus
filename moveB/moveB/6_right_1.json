@@ -1,0 +1,43 @@
+{
+    "prefix": "mag_",
+    "suffix": ".jpg",
+    "resX": 1888,
+    "resY": 1888,
+    "cropTop": 0,
+    "cropBottom": 0,
+    "cropLeft": 0,
+    "cropRight": 0,
+    "intervalX": 5,
+    "intervalY": 5,
+    "border": 0,
+    "linewidth": 8,
+    "ratio": "1.5",
+    "magnification": "4.0",
+    "num": 2,
+    "position1": false,
+    "position2": true,
+    "position3": false,
+    "position4": false,
+    "color1": "red",
+    "color2": "green",
+    "color3": "yellow",
+    "color4": "blue",
+    "ratioOffset": [
+        [
+            0.33499999999999985,
+            0.45299999999999996
+        ],
+        [
+            0.506,
+            0.6550000000000001
+        ],
+        [
+            0.5,
+            0.5
+        ],
+        [
+            0.5,
+            0.5
+        ]
+    ]
+}

@@ -65,62 +65,66 @@ def multi_scale_retinex(img, sigma_list):
     return retinex_img
 
 # 设置输入和输出文件夹路径
-# input_folder = './input_debug'
-# output_folder = './output_debug'
-# target_brightness = 100
-# # 确保输出文件夹存在
-# os.makedirs(output_folder, exist_ok=True)
+input_folder = './input'
+output_folder = './output'
+target_brightness = 100
+# 确保输出文件夹存在
+os.makedirs(output_folder, exist_ok=True)
 
 
-# for filename in os.listdir(input_folder):
-#     if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-#         # 读取彩色图像
-#         img = cv2.imread(os.path.join(input_folder, filename))
-#         print(f"Processing {filename} with shape {img.shape}")
-#         result = SSR(img = img, sigma = 80)
+for filename in os.listdir(input_folder):
+    if filename.endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+        # 读取彩色图像
+        img = cv2.imread(os.path.join(input_folder, filename))
+        print(f"Processing {filename} with shape {img.shape}")
+        sigma = 50
+        ssr_result = single_scale_retinex(img, sigma=sigma)
+        print(sigma)
+    # cv2.imwrite(os.path.join(output_folder, 'ssr_result.jpg'), ssr_result)
+    #     result = SSR(img = img, sigma = 80)
 
-#         # 保存处理后的图像
-#         cv2.imwrite(os.path.join(output_folder, filename), result)
+        # 保存处理后的图像
+        cv2.imwrite(os.path.join(output_folder, filename), ssr_result)
 
-# print("SSR处理完成")
-if __name__ == "__main__":
-    input_image_path = './input_debug/0001.jpg'  # 替换为你的图像路径
-    output_folder = './output_debug'
+print("SSR处理完成")
+# if __name__ == "__main__":
+#     input_image_path = './input_debug/0001.jpg'  # 替换为你的图像路径
+#     output_folder = './output_debug'
 
-    # 确保输出文件夹存在
-    os.makedirs(output_folder, exist_ok=True)
+#     # 确保输出文件夹存在
+#     os.makedirs(output_folder, exist_ok=True)
 
-    # 加载图像
-    img = cv2.imread(input_image_path)
+#     # 加载图像
+#     img = cv2.imread(input_image_path)
 
-    if img is None:
-        print("Error: Image not found or unable to load.")
-        exit()
+#     if img is None:
+#         print("Error: Image not found or unable to load.")
+#         exit()
 
-    # 应用SSR
-    sigma = 50
-    ssr_result = single_scale_retinex(img, sigma=sigma)
-    print(sigma)
-    cv2.imwrite(os.path.join(output_folder, 'ssr_result.jpg'), ssr_result)
+#     # 应用SSR
+#     sigma = 50
+#     ssr_result = single_scale_retinex(img, sigma=sigma)
+#     print(sigma)
+#     cv2.imwrite(os.path.join(output_folder, 'ssr_result.jpg'), ssr_result)
 
     # 应用MSR
-    msr_result = multi_scale_retinex(img, sigma_list=[15, 80, 250])
-    cv2.imwrite(os.path.join(output_folder, 'msr_result.jpg'), msr_result)
+    # msr_result = multi_scale_retinex(img, sigma_list=[15, 80, 250])
+    # cv2.imwrite(os.path.join(output_folder, 'msr_result.jpg'), msr_result)
 
-    # 显示结果
-    import matplotlib.pyplot as plt
+    # # 显示结果
+    # import matplotlib.pyplot as plt
 
-    fig, axs = plt.subplots(1, 3, figsize=(15, 5))
-    axs[0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    axs[0].set_title('Original Image')
-    axs[0].axis('off')
+    # fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+    # axs[0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    # axs[0].set_title('Original Image')
+    # axs[0].axis('off')
 
-    axs[1].imshow(cv2.cvtColor(ssr_result, cv2.COLOR_BGR2RGB))
-    axs[1].set_title('SSR Result')
-    axs[1].axis('off')
+    # axs[1].imshow(cv2.cvtColor(ssr_result, cv2.COLOR_BGR2RGB))
+    # axs[1].set_title('SSR Result')
+    # axs[1].axis('off')
 
-    axs[2].imshow(cv2.cvtColor(msr_result, cv2.COLOR_BGR2RGB))
-    axs[2].set_title('MSR Result')
-    axs[2].axis('off')
+    # axs[2].imshow(cv2.cvtColor(msr_result, cv2.COLOR_BGR2RGB))
+    # axs[2].set_title('MSR Result')
+    # axs[2].axis('off')
 
-    plt.show()
+    # plt.show()
